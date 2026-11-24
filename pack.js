@@ -48,13 +48,16 @@ ${CATALOG.map(c=>`### ${c.name}: ${c.title}\n${tbl(['단원','제목','시간','
   if(x.pts)o.push(x.pts.map(p=>'- '+p).join('\n'));
   if(x.cal)o.push(x.cal.map(m=>`- ${m[0]}: ${m[1].map(i=>i[0]).join(' / ')||'—'}`).join('\n'));
   (x.tables||[]).forEach(t=>o.push((t.title?`**${t.title}**\n`:'')+tbl(t.head,t.rows)));
+  if(x.kv)o.push(x.kv.map(r=>`- **${r[0]}**: ${r[1]}`).join('\n'));
+  if(x.cards)o.push(x.cards.map(l=>`- **${l[0]}**${l.length>1?': '+l.slice(1).join(' / '):''}`).join('\n'));
   if(x.story)o.push('사례: '+x.story);
   if(x.tip)o.push('> 핵심: '+x.tip);
   if(x.discuss)o.push('토론: '+x.discuss);
+  if(x.note)o.push(x.note);
   return o.join('\n\n')}
  function unitsMd(){
   const I=COURSE.intro;
-  return `## 2-2. 입문과정 교안 학습 내용 (교안 「나는 사업주다」 입문 과정 v0.6, 83장)
+  return `## 2-2. 교안 학습 내용: 입문·초급·중급 (교안 「나는 사업주다」 입문 v0.6 83장, 초급 v0.1 114장, 중급 v0.1 132장)
 
 교안의 세율·한도·요건은 교안이 밝힌 대로 강의 연도 기준 요약입니다. 실제 신고·신청 전에는 국세청·관할 기관 안내로 확인해야 합니다.
 
@@ -75,6 +78,12 @@ ${u.practice?'\n#### 실습\n'+u.practice.map(p=>`- **${p.t}** (${p.time}) — �
 ${u.summary.map((x,i)=>`${i+1}. ${x}`).join('\n')}
 자가 점검: ${u.selfCheck}`).join('\n\n')}
 
+${Object.entries(COURSE.sets||{}).map(([cid,st])=>`### ${st.name} 과정 안내
+${st.intro.map(secMd).join('\n\n')}
+
+### ${st.name} 마무리: 자가 점검표·내가 만든 산출물·다음 단계·출처
+${st.wrap.map(secMd).join('\n\n')}`).join('\n\n')}
+
 ### 입문 과정 마무리 (슬라이드 79~82)
 내가 만든 네 가지: ${COURSE.wrap.made.map(m=>m[0]+' '+m[1]).join(' / ')}
 다음 단계(초급 16시간): ${COURSE.wrap.next.map(n=>`${n[0]}(${n[1]}) ${n[2]}`).join(', ')}
@@ -83,7 +92,7 @@ ${COURSE.wrap.note}
 ### 입문 과정 용어 색인
 ${COURSE.terms.map(t=>`- **${t[0]}**: ${t[1]}`).join('\n')}
 
-### 입문 과정 확인 퀴즈 (정답 포함)
+### 입문·초급·중급 단원 확인 퀴즈 (정답 포함)
 ${COURSE.units.map(u=>`**${u.id} ${u.title}**\n`+u.quiz.map((q,i)=>`${i+1}. ${q.q}\n${q.o.map((o,k)=>`   ${'①②③④'[k]} ${o}`).join('\n')}\n   - 정답: ${'①②③④'[q.a]} — ${q.e} (${q.r})`).join('\n')).join('\n\n')}
 `}
  function lessonMd(){
@@ -136,7 +145,7 @@ ${tbl(['마감','공고','기관','링크'],(j.items||[]).map(x=>[x.deadline||'�
    return `## 10. 내 정보 (수강생이 직접 입력한 내용)\n${tbl(['항목','내용'],rows)}\n`}catch(e){return''}
  }
  async function build(opts={}){
-  const parts=[`# 정부지원금·정책사업 학습자료 (에듀팡파트너즈 수강생용)\n\n생성일 ${today()} · 출처: 강의교안 「나는 사업주다」 v0.6, 변호사 강의 「정부지원금, 받는 것보다 ‘지키는 것’이 더 어렵습니다」\n`,INSTRUCTION,guideMd(),courseMd(),unitsMd(),lessonMd(),toolsMd(),quizMd(),await noticesMd()];
+  const parts=[`# 정부지원금·정책사업 학습자료 (에듀팡파트너즈 수강생용)\n\n생성일 ${today()} · 출처: 강의교안 「나는 사업주다」 입문·초급·중급, 변호사 강의 「정부지원금, 받는 것보다 ‘지키는 것’이 더 어렵습니다」\n`,INSTRUCTION,guideMd(),courseMd(),unitsMd(),lessonMd(),toolsMd(),quizMd(),await noticesMd()];
   if(opts.includeMe){const m=meMd();if(m)parts.push(m)}
   return parts.join('\n');
  }
