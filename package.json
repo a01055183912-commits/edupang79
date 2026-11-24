@@ -1,0 +1,8 @@
+{
+  "name": "edupang79",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node server.mjs", "collect": "node scripts/collect.mjs" },
+  "engines": { "node": ">=18" }
+}
