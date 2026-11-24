@@ -1,0 +1,305 @@
+{
+ "updatedAt": "2026-11-25T01:47:36+09:00",
+ "sources": [
+  {
+   "id": "bsbsc",
+   "name": "부산소상공인지원센터",
+   "ok": true,
+   "count": 5
+  },
+  {
+   "id": "btp",
+   "name": "부산테크노파크",
+   "ok": true,
+   "count": 21
+  }
+ ],
+ "items": [
+  {
+   "id": "bsbsc-482",
+   "title": "소상공인 위기대응 특별 컨설팅 소상공인 모집",
+   "program": "소상공인 경영전략 컨설팅",
+   "start": "2026-10-30",
+   "deadline": "2026-11-27",
+   "url": "https://bsbsc.kr/posting/482",
+   "source": "bsbsc",
+   "sourceName": "부산소상공인지원센터",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582714",
+   "title": "2026년 산업안전보건 인증 지원사업 3차 모집공고",
+   "program": "",
+   "start": "2026-11-23",
+   "deadline": "2026-11-27",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582714",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582696",
+   "title": "2027년 지역 자율형 권역단위 핵심기업 육성(R&D) 기술 수요조사 공고",
+   "program": "",
+   "start": "2026-11-20",
+   "deadline": "2026-11-27",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582696",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582673",
+   "title": "2027년 부산광역시 고령친화산업 육성 지원사업 국내전시회 참가지원 참여기업 모집 공고 - 국제의료...",
+   "program": "",
+   "start": "2026-11-11",
+   "deadline": "2026-11-27",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582673",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582687",
+   "title": "신평장림 에너지자급자족 입주기업 에너지 효율화 지원 사업 수요기업 모집 공고",
+   "program": "",
+   "start": "2026-11-17",
+   "deadline": "2026-11-30",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582687",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582071",
+   "title": "수정2026년 부산 연구개발장비 공동활용 지원사업 모집 공고(2차)",
+   "program": "",
+   "start": "2026-06-19",
+   "deadline": "2026-11-30",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582071",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581621",
+   "title": "2026 지산학 브랜치 기업「현장솔루션 랩(lab)」참여 기업 모집 공고",
+   "program": "",
+   "start": "2026-03-30",
+   "deadline": "2026-11-30",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581621",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581349",
+   "title": "2026년도 부산 가명정보활용지원센터 컨설팅 지원사업 모집공고",
+   "program": "",
+   "start": "2026-01-13",
+   "deadline": "2026-11-30",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581349",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581897",
+   "title": "수정부산 첨단신발융합허브센터(감전단지) 입주기업 모집공고(상시)",
+   "program": "",
+   "start": "2026-05-18",
+   "deadline": "2026-12-10",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581897",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581740",
+   "title": "수정첨단신발융합허브센터 공장동 신규 입주기업 상시모집 공고(변경)",
+   "program": "",
+   "start": "2026-04-13",
+   "deadline": "2026-12-10",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581740",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581564",
+   "title": "첨단신발융합허브센터 공장동 신규 입주기업 상시모집 공고",
+   "program": "",
+   "start": "2026-03-10",
+   "deadline": "2026-12-10",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581564",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581525",
+   "title": "「2026 데이터 기반 융복합 서비스 개발 컨설팅 지원」 공고",
+   "program": "",
+   "start": "2026-03-05",
+   "deadline": "2026-12-10",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581525",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582475",
+   "title": "수정2026 신발산업 해외물류 바우처 지원사업 참가기업 모집공고(지원범위확대)",
+   "program": "",
+   "start": "2026-09-22",
+   "deadline": "2026-12-11",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582475",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582309",
+   "title": "신발산업진흥센터 입주기업 상시 모집 공고",
+   "program": "",
+   "start": "2026-08-25",
+   "deadline": "2026-12-11",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582309",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bsbsc-481",
+   "title": "부산 소상공인 에너지바우처 연장공고 및 신청 방법★",
+   "program": "2026 부산 소상공인 에너지바우처 지급 사업",
+   "start": "2026-10-20",
+   "deadline": "2026-12-15",
+   "url": "https://bsbsc.kr/posting/481",
+   "source": "bsbsc",
+   "sourceName": "부산소상공인지원센터",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bsbsc-445",
+   "title": "2026 라이브커머스 운영 지원사업 (12월 모집中)",
+   "program": "2026 라이브커머스 운영 지원",
+   "start": "2026-04-24",
+   "deadline": "2026-12-18",
+   "url": "https://bsbsc.kr/posting/445",
+   "source": "bsbsc",
+   "sourceName": "부산소상공인지원센터",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582692",
+   "title": "부산광역시 신규 규제자유특구 사업발굴 수요조사 공고",
+   "program": "",
+   "start": "2026-11-19",
+   "deadline": "2026-12-23",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582692",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bsbsc-429",
+   "title": "「2026 소상공인 법률서비스 지원사업」 모집공고",
+   "program": "법률 서비스 지원사업",
+   "start": "2026-02-09",
+   "deadline": "2026-12-31",
+   "url": "https://bsbsc.kr/posting/429",
+   "source": "bsbsc",
+   "sourceName": "부산소상공인지원센터",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bsbsc-434",
+   "title": "2026 소상공인 통합교육 공고",
+   "program": "소상공인 통합교육",
+   "start": "2026-04-06",
+   "deadline": "2026-12-31",
+   "url": "https://bsbsc.kr/posting/434",
+   "source": "bsbsc",
+   "sourceName": "부산소상공인지원센터",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582413",
+   "title": "글로벌시장 대응 AI기반 공조부품 성능평가 인프라 고도화사업 지원사업 2차 공고",
+   "program": "",
+   "start": "2026-09-07",
+   "deadline": "2026-12-31",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582413",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581823",
+   "title": "2026년 산업기술단지 거점기능강화사업 「현장애로지원 기술닥터제 수요기업」모집 공고",
+   "program": "",
+   "start": "2026-05-06",
+   "deadline": "2026-12-31",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581823",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581431",
+   "title": "수정「(재)부산테크노파크 블록체인센터 전문가 POOL 모집」 공고",
+   "program": "",
+   "start": "2026-02-09",
+   "deadline": "2026-12-31",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581431",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581379",
+   "title": "2026년 KOLAS 공인 제품인증 서비스 바우처 지원사업 참가 희망기업 모집 공고",
+   "program": "",
+   "start": "2026-01-29",
+   "deadline": "2026-12-31",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581379",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9581378",
+   "title": "2026년 이동 생체역학 성능평가 지원사업 참가 희망 모집 공고",
+   "program": "",
+   "start": "2026-01-29",
+   "deadline": "2026-12-31",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581378",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582503",
+   "title": "전력반도체 특화단지 테스트베드 조성 및 활성화 수요조사 공고(연장)",
+   "program": "",
+   "start": "2026-10-01",
+   "deadline": "2027-01-31",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582503",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "btp-9582246",
+   "title": "부산씨푸드플랫폼 입주기업 모집공고",
+   "program": "",
+   "start": "2026-08-01",
+   "deadline": "2027-12-31",
+   "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582246",
+   "source": "btp",
+   "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  }
+ ]
+}

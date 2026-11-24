@@ -225,6 +225,9 @@ function renderDoc(){
 
 /* ===== 화면 ===== */
 const TABS=[['project','사업 설정'],['course','과정 편성'],['inst','강사'],['budget','예산'],['notice','공고'],['doc','제안서'],['data','데이터']];
+let FEED=null,FEEDERR='',FEEDQ='';
+fetch('data/notices.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(j=>{FEED=j;if(tab==='notice')live()})
+ .catch(()=>{FEEDERR='수집된 공고를 불러오지 못했습니다. 웹 주소(GitHub Pages)로 열었을 때만 보입니다.';if(tab==='notice')live()});
 let tab=(location.hash||'#project').slice(1);if(!TABS.some(t=>t[0]===tab))tab='project';
 const F={ // 탭별 화면
 project(){const P=S.project;return`
@@ -293,7 +296,10 @@ budget(){const P=S.price;return`
  <div class="card"><h2>예산 산출</h2><div data-live="budget"></div></div>`},
 
 notice(){const items=S.notices.map((x,n)=>({x,n})).sort((a,b)=>(a.x.deadline||'9999')<(b.x.deadline||'9999')?-1:1);return`
- <div class="card"><h2>정책사업 공고</h2><p class="hint">관심 공고를 모아 마감일(D-day)을 관리합니다. 마감 임박 순으로 보입니다.</p>
+ <div class="card"><h2>새로 수집된 공고</h2><p class="hint">매일 아침 7시에 부산 지원기관 사이트에서 자동 수집한 접수 중 공고입니다. 접수 기한과 자격은 반드시 공고문에서 확인하세요.</p>
+ <label>검색<input data-feedq placeholder="제목·사업명·기관 (예: 교육, 창업)" value="${esc(FEEDQ)}"></label>
+ <div data-live="feed" class="mt"></div></div>
+ <div class="card"><h2>내 공고 관리</h2><p class="hint">관심 공고를 모아 마감일(D-day)을 관리합니다. 마감 임박 순으로 보입니다.</p>
  ${items.map(({x,n})=>`<div class="card" style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><div>${ddayChip(x.deadline)}<span class="chip">${esc(x.status||'검토')}</span></div>
   <div class="row"><button class="btn sm" data-act="mkProject:${n}">이 공고로 사업 설정</button><button class="btn sm del" data-act="delNotice:${n}">삭제</button></div></div>
   <div class="nt mt"><label>공고명<input ${bind(`notices.${n}.title`,x.title)}></label><label>기관<input ${bind(`notices.${n}.agency`,x.agency)}></label>
@@ -324,6 +330,18 @@ const LIVE={
   return`<table><thead><tr><th>항목</th><th>산출 근거</th><th class="n">금액</th></tr></thead><tbody>${B.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="n">${won(r[2])}</td></tr>`).join('')}
   <tr><td>일반관리비</td><td>직접비 ${won(B.direct)} × ${num(S.price.mgmt)}%</td><td class="n">${won(B.mgmt)}</td></tr>${B.vat?`<tr><td>부가세</td><td>10%</td><td class="n">${won(B.vat)}</td></tr>`:''}</tbody>
   <tfoot><tr><td colspan="2">합계 (1인당 ${won(B.perHead)})</td><td class="n">${won(B.total)}</td></tr></tfoot></table>`},
+ feed(){
+  if(FEEDERR)return`<p class="hint">${esc(FEEDERR)}</p>`;if(!FEED)return'<p class="hint">불러오는 중…</p>';
+  const age=FEED.updatedAt?(Date.now()-new Date(FEED.updatedAt))/36e5:null,have=new Set(S.notices.map(n=>n.url));
+  const bad=(FEED.sources||[]).filter(x=>!x.ok),q=FEEDQ.trim().toLowerCase();
+  const list=(FEED.items||[]).filter(x=>!q||[x.title,x.program,x.sourceName].join(' ').toLowerCase().includes(q));
+  const t=new Date();t.setDate(t.getDate()-2);const newSince=t.toISOString().slice(0,10);
+  return`<p class="hint">마지막 수집 ${esc((FEED.updatedAt||'없음').replace('T',' ').slice(0,16))} · ${(FEED.sources||[]).map(x=>`${esc(x.name)} ${x.count}건`).join(' · ')}</p>
+  ${bad.length?`<p><span class="chip bad">수집 실패</span> ${bad.map(x=>esc(x.name)+': '+esc(x.error||'')).join(' / ')} <span class="hint">(이전 결과를 유지 중)</span></p>`:''}
+  ${age!=null&&age>48?'<p><span class="chip bad">48시간 넘게 갱신되지 않았습니다</span></p>':''}
+  ${list.length?`<table><thead><tr><th>마감</th><th>공고</th><th></th></tr></thead><tbody>${list.map(x=>`<tr><td>${x.deadline?esc(x.deadline.slice(5))+'<br>'+ddayChip(x.deadline):'미정'}</td>
+  <td>${x.firstSeen>=newSince?'<span class="chip ok">신규</span>':''}<a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.title)}</a><br><span class="hint">${esc(x.sourceName)}${x.program?' · '+esc(x.program):''}</span></td>
+  <td><button class="btn sm" data-act="watch:${esc(x.id)}" ${have.has(x.url)?'disabled':''}>${have.has(x.url)?'등록됨':'관심 등록'}</button></td></tr>`).join('')}</tbody></table>`:'<p class="hint">조건에 맞는 공고가 없습니다.</p>'}`},
  doc(){return esc(renderDoc().text)},
  tenure(){return esc(tenure()||'-')},
  miss(){const m=renderDoc().miss;return m.length?`<p><span class="chip warn">입력 필요 ${m.length}</span> ${m.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</p>`:'<p><span class="chip ok">모든 변수가 채워졌습니다</span></p>'}
@@ -349,6 +367,7 @@ function importInst(raw){
 
 /* ===== 이벤트 ===== */
 document.addEventListener('input',e=>{const el=e.target;
+ if(el.matches('[data-feedq]')){FEEDQ=el.value;live();return}
  if(el.matches('[data-tpl]')){S.tpl=el.value;save();live();return}
  const b=el.dataset&&el.dataset.bind;if(!b)return;
  const v=el.type==='checkbox'?el.checked:el.type==='number'?(el.value===''?0:num(el.value)):el.value;
@@ -368,6 +387,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if
   case'impInst':importInst($('#impTxt').value);break;
   case'addExtra':S.extra.push({name:'',amount:0});save();render();break;
   case'delExtra':S.extra.splice(n,1);save();render();break;
+  case'watch':{const x=(FEED&&FEED.items||[]).find(i=>i.id===arg);if(x&&!S.notices.some(n=>n.url===x.url)){S.notices.push({title:x.title,agency:x.sourceName,deadline:x.deadline||'',status:'검토',url:x.url,memo:x.program||''});save();render();toast('내 공고에 등록했습니다')}break}
   case'addNotice':S.notices.push({title:'',agency:'',deadline:'',status:'검토',url:'',memo:''});save();render();break;
   case'delNotice':if(confirm('이 공고를 삭제할까요?')){S.notices.splice(n,1);save();render()}break;
   case'mkProject':{const x=S.notices[n];if(x){S.project.name=x.title||S.project.name;S.project.agency=x.agency||S.project.agency;save();go('project');toast('공고 정보를 사업 설정에 넣었습니다')}break}
