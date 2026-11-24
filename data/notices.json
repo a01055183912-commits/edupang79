@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-25T01:59:31+09:00",
+ "updatedAt": "2026-11-25T02:05:53+09:00",
  "sources": [
   {
    "id": "bsbsc",
@@ -18,9 +18,37 @@
    "name": "부산기술창업투자원",
    "ok": true,
    "count": 3
+  },
+  {
+   "id": "bipa",
+   "name": "부산정보산업진흥원",
+   "ok": true,
+   "count": 11
   }
  ],
  "items": [
+  {
+   "id": "bipa-85490",
+   "title": "부산 글로벌게임센터(BGC) 오렌지플래닛 입주모집 공고",
+   "program": "",
+   "start": "2026-11-12",
+   "deadline": "2026-11-25",
+   "url": "https://bipa.kr/board/business/view?seq=85490",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bipa-85489",
+   "title": "2026년 부산콘텐츠비즈타운(기업지원센터) 4차 입주기업 모집 공고",
+   "program": "",
+   "start": "2026-11-12",
+   "deadline": "2026-11-26",
+   "url": "https://bipa.kr/board/business/view?seq=85489",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
   {
    "id": "bsbsc-482",
    "title": "소상공인 위기대응 특별 컨설팅 소상공인 모집",
@@ -121,6 +149,61 @@
    "firstSeen": "2026-11-25"
   },
   {
+   "id": "bipa-85504",
+   "title": "2026년 지역 게임 IP 콘텐츠 글로벌 확장 및 사업화 컨설팅 공고",
+   "program": "",
+   "start": "2026-11-22",
+   "deadline": "2026-11-30",
+   "url": "https://bipa.kr/board/business/view?seq=85504",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bipa-85497",
+   "title": "2026년 부산글로벌웹툰센터 창작지원실 2차 입주모집 추가 공고",
+   "program": "",
+   "start": "2026-11-17",
+   "deadline": "2026-11-30",
+   "url": "https://bipa.kr/board/business/view?seq=85497",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bipa-85203",
+   "title": "2026년 ICT 중소기업 정보보호 지원 사업 수요기업 모집",
+   "program": "",
+   "start": "2026-07-01",
+   "deadline": "2026-11-30",
+   "url": "https://bipa.kr/board/business/view?seq=85203",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bipa-84939",
+   "title": "부산 클라우드 혁신센터(부산CIC) 멤버십 프로그램 참여기업 모집 공고",
+   "program": "",
+   "start": "2026-04-10",
+   "deadline": "2026-11-30",
+   "url": "https://bipa.kr/board/business/view?seq=84939",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bipa-85472",
+   "title": "「부산 가상증강현실 융복합센터」 입주모집공고",
+   "program": "",
+   "start": "2026-11-03",
+   "deadline": "2026-12-01",
+   "url": "https://bipa.kr/board/business/view?seq=85472",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
    "id": "bsia-1062",
    "title": "우리금융그룹 2027년「디노랩 부산센터」모집 공고",
    "program": "우리금융그룹",
@@ -129,6 +212,17 @@
    "url": "https://www.bsia.or.kr/board?mcode=an021&pcon=3&bd_idx=1062",
    "source": "bsia",
    "sourceName": "부산기술창업투자원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bipa-85512",
+   "title": "K-해양 AI 벨트 얼라이언스 참여 수요조사",
+   "program": "",
+   "start": "2026-11-24",
+   "deadline": "2026-12-09",
+   "url": "https://bipa.kr/board/business/view?seq=85512",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
    "firstSeen": "2026-11-25"
   },
   {
@@ -231,6 +325,17 @@
    "firstSeen": "2026-11-25"
   },
   {
+   "id": "bipa-85405",
+   "title": "사이버보안 원격 보안관제 수요기업 모집",
+   "program": "",
+   "start": "2026-10-14",
+   "deadline": "2026-12-18",
+   "url": "https://bipa.kr/board/business/view?seq=85405",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
    "id": "btp-9582692",
    "title": "부산광역시 신규 규제자유특구 사업발굴 수요조사 공고",
    "program": "",
@@ -316,6 +421,28 @@
    "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9581378",
    "source": "btp",
    "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bipa-85155",
+   "title": "「AX 에이지테크 레퍼런스-업 프로젝트」 일반 실증 수요처 Pool 안내 (상시)",
+   "program": "",
+   "start": "2026-06-18",
+   "deadline": "2026-12-31",
+   "url": "https://bipa.kr/board/business/view?seq=85155",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bipa-84829",
+   "title": "「부산AI실증지원센터 운영」 고성능 컴퓨터(HPC) 이용 지원사업 참여자(기업) 모집",
+   "program": "",
+   "start": "2026-02-19",
+   "deadline": "2026-12-31",
+   "url": "https://bipa.kr/board/business/view?seq=84829",
+   "source": "bipa",
+   "sourceName": "부산정보산업진흥원",
    "firstSeen": "2026-11-25"
   },
   {

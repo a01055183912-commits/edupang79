@@ -74,10 +74,34 @@ async function bsia() {
   return out;
 }
 
+/* ---- 부산정보산업진흥원(bipa.kr): 사업공고 게시판. 목록에 마감일 대신 D-day만 있어 오늘(KST)에 더해 계산한다 ---- */
+async function bipa() {
+  const out = [];
+  const base = new Date(today() + 'T00:00:00Z');
+  const addDays = n => new Date(base.getTime() + n * 864e5).toISOString().slice(0, 10);
+  for (const page of [1, 2]) {
+    const h = await get(`https://bipa.kr/board/business/list?page=${page}&size=10`);
+    const rows = h.split(/<tr\b/).slice(1).filter(r => r.includes('/board/business/view?seq='));
+    if (!rows.length) { if (page === 1) throw new Error('게시판 행을 찾지 못했습니다 (구조 변경 또는 차단)'); break; }
+    for (const r of rows) {
+      const seq = (r.match(/view\?seq=(\d+)/) || [])[1];
+      const title = decode((r.match(/view\?seq=\d+">([\s\S]*?)<\/a>/) || [])[1] || '');
+      const posted = (r.match(/<td>(\d{4}-\d{2}-\d{2})<\/td>/) || [])[1] || '';
+      if (!seq || !title || /class="closed"/.test(r)) continue;
+      const d = r.match(/class="available">\s*D-(\d+)/);
+      if (d) out.push({ id: 'bipa-' + seq, title, program: '', start: posted, deadline: addDays(+d[1]), url: `https://bipa.kr/board/business/view?seq=${seq}` });
+      else if (posted && posted >= addDays(-120)) out.push({ id: 'bipa-' + seq, title, program: '마감일 미표기', start: posted, deadline: '', url: `https://bipa.kr/board/business/view?seq=${seq}` });
+    }
+    await sleep(800);
+  }
+  return out;
+}
+
 const SOURCES = [
   { id: 'bsbsc', name: '부산소상공인지원센터', run: bsbsc },
   { id: 'btp', name: '부산테크노파크', run: btp },
   { id: 'bsia', name: '부산기술창업투자원', run: bsia },
+  { id: 'bipa', name: '부산정보산업진흥원', run: bipa },
 ];
 
 let prev = { items: [], sources: [] };
