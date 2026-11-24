@@ -25,6 +25,7 @@
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script src="study-data.js"></script>
+<script src="course-data.js"></script>
 <script src="pack.js"></script>
 <script>
 'use strict';
@@ -95,9 +96,38 @@ function badgeCard(){const n=BADGES.filter(b=>S.badges[b[0]]).length;
 let FEED=null,FEEDERR='',FEEDQ='';
 fetch('data/notices.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(j=>{FEED=j;live()}).catch(()=>{FEEDERR='수집된 공고를 불러오지 못했습니다. 웹 주소(GitHub Pages)로 열었을 때만 보입니다.';live()});
 
+/* ===== 교안 학습 화면 ===== */
+let UNIT='intro';const UQ={};
+function ctable(t){return`${t.title?`<h4 style="margin:12px 0 4px">${esc(t.title)}</h4>`:''}<div class="tw"><table><thead><tr>${t.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map((c,i)=>`<td>${i===0?`<b>${esc(c)}</b>`:esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+function cflow(f){return`<div class="flow">${f.map((x,i)=>{const [a,b]=x.split('|');return`${i?'<div class="a">→</div>':''}<div class="s s${i%5+1}">${esc(a)}${b?`<small>${esc(b)}</small>`:''}</div>`}).join('')}</div>`}
+function ccal(c){return`<div class="legend"><span class="chip warn">부가세</span><span class="chip ok">소득세·법인세</span><span class="chip">원천세·연말정산</span></div><div class="cal">${c.map(m=>`<div class="cm"><b>${esc(m[0])}</b>${m[1].length?m[1].map(it=>`<span class="ci ${it[1]}">${esc(it[0])}</span>`).join(''):'<span class="hint">—</span>'}</div>`).join('')}</div>`}
+function csec(x){return`<div class="sec"><h3>${esc(x.t)} ${x.sl?`<span class="chip">슬라이드 ${esc(x.sl)}</span>`:''}</h3>
+ ${x.flow?cflow(x.flow):''}${x.pts?`<ul>${x.pts.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>`:''}${x.cal?ccal(x.cal):''}${(x.tables||[]).map(ctable).join('')}
+ ${x.story?`<div class="story"><b>📖 사례</b>${esc(x.story)}</div>`:''}${x.tip?`<div class="rem"><b>💡 핵심</b> ${esc(x.tip)}</div>`:''}${x.discuss?`<div class="disc"><b>💬 토론</b>${esc(x.discuss)}</div>`:''}</div>`}
+function unitHtml(id){
+ const back=`<button class="btn sm" data-go="course" style="margin-bottom:10px">← 학습 목록</button>`;
+ if(id==='intro')return back+`<div class="card"><h2>🧭 과정 안내 <span class="chip">슬라이드 ${COURSE.intro.slides}</span></h2><h3>이 과정을 마치면 할 수 있는 것</h3>${COURSE.intro.goals.map((g,i)=>`<div class="goal"><i>0${i+1}</i><span>${esc(g)}</span></div>`).join('')}${COURSE.intro.sections.map(csec).join('')}</div>`;
+ if(id==='terms')return back+`<div class="card"><h2>📕 용어 색인 <span class="chip">슬라이드 81</span></h2><p class="hint">입문 과정에 나오는 용어를 교안 설명을 바탕으로 정리했습니다.</p>${COURSE.terms.map(t=>`<div class="fc"><b>${esc(t[0])}</b><p style="margin:4px 0 0">${esc(t[1])}</p></div>`).join('')}</div>`;
+ if(id==='wrap'){const W=COURSE.wrap;return back+`<div class="card"><h2>🎓 입문 과정 정리: 내가 만든 네 가지 <span class="chip">슬라이드 79~82</span></h2>${W.made.map(m=>`<label class="item ${S.done[m[0]]?'on':''}" style="cursor:default"><span style="font-size:1.4rem">${S.done[m[0]]?'✅':'⬜'}</span><span class="t"><b>${m[0]}</b> ${esc(m[1])}</span></label>`).join('')}<p class="hint">단원을 마치면(학습 목록에서 체크) 자동으로 표시됩니다.</p>
+  <h3>다음 단계: 초급 미리보기 (16시간)</h3><div class="tiles2">${W.next.map((n,i)=>`<div class="tk c${i%6}"><b>${n[0]} · ${n[1]}</b><small>${esc(n[2])}</small></div>`).join('')}</div><div class="rem">${esc(W.note)}</div></div>`}
+ const i=COURSE.units.findIndex(u=>u.id===id),u=COURSE.units[i];if(!u)return back+'<div class="card"><p>단원을 찾지 못했습니다.</p></div>';
+ const ans=(UQ[id]||{});
+ const score=u.quiz.filter((q,k)=>ans[k]===q.a).length,answered=Object.keys(ans).length;
+ return back+`<div class="card"><h2>${esc(u.id)} ${esc(u.title)}</h2><p class="hint">${esc(u.meta)}</p><h3>이 단원을 마치면</h3>${u.goals.map((g,k)=>`<div class="goal"><i>0${k+1}</i><span>${esc(g)}</span></div>`).join('')}
+ ${u.sections.map(csec).join('')}
+ ${u.practice?`<div class="sec"><h3>✍️ 실습</h3>${u.practice.map(p=>`<div class="fc"><b>${esc(p.t)}</b> <span class="chip warn">${esc(p.time)}</span><p style="margin:4px 0"><b>목표</b> ${esc(p.goal)}</p><p style="margin:4px 0"><b>방법</b> ${esc(p.steps)}</p><p style="margin:4px 0"><b>산출물</b> ${esc(p.out)}</p>${p.note?`<p class="hint" style="margin:4px 0 0">${esc(p.note)}</p>`:''}</div>`).join('')}</div>`:''}
+ <div class="sec"><h3>📌 ${esc(u.id)} 정리</h3><ol class="sum">${u.summary.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><div class="disc"><b>✅ 자가 점검</b>${esc(u.selfCheck)}</div></div></div>
+ <div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">✏️ 확인 퀴즈</h2><span class="chip ${answered&&score===u.quiz.length?'ok':'vio'}">${score}/${u.quiz.length}</span></div><p class="hint">보기를 눌러 정답과 해설을 확인하세요.</p>
+ ${u.quiz.map((q,k)=>`<div class="fc"><b>${k+1}. ${esc(q.q)}</b>${q.o.map((o,j)=>{let c='opt';if(ans[k]!=null){if(j===q.a)c+=' right';else if(j===ans[k])c+=' wrong'}return`<button class="${c}" data-uq="${esc(id)}:${k}:${j}" ${ans[k]!=null?'disabled':''}>${'①②③④'[j]} ${esc(o)}</button>`}).join('')}${ans[k]!=null?`<div class="rem"><b>${ans[k]===q.a?'🎉 정답!':'💧 아쉬워요'}</b> ${esc(q.e)} <span class="chip">${esc(q.r)}</span></div>`:''}</div>`).join('')}
+ ${answered?`<button class="btn sm" data-uqreset="${esc(id)}">다시 풀기</button>`:''}</div>
+ <div class="card"><label class="item ${S.done[id]?'on':''}"><input type="checkbox" data-done="${esc(id)}" ${S.done[id]?'checked':''}><span class="t"><b>이 단원을 학습했습니다</b><small>체크하면 진도에 반영돼요</small></span></label>
+ <div class="unitnav">${i>0?`<button class="btn" data-unit="${COURSE.units[i-1].id}">← ${COURSE.units[i-1].id}</button>`:'<span></span>'}${i<COURSE.units.length-1?`<button class="btn pri" data-unit="${COURSE.units[i+1].id}">${COURSE.units[i+1].id} →</button>`:`<button class="btn pri" data-unit="wrap">🎓 마무리</button>`}</div></div>`}
+function openUnit(id){UNIT=id;tab='unit';history.replaceState(null,'','#unit-'+id);render();window.scrollTo(0,0)}
+
 /* ===== 화면 ===== */
 const TABS=[['me','🐣','내 정보'],['course','🦉','학습'],['notice','🔔','공고'],['guide','🗺️','가이드'],['ask','✨','Claude'],['data','🎒','설정']];
-let tab=(location.hash||'#me').slice(1);if(!TABS.some(t=>t[0]===tab))tab='me';
+let tab=(location.hash||'#me').slice(1);
+if(tab.startsWith('unit-')){UNIT=tab.slice(5);tab='unit'}else if(!TABS.some(t=>t[0]===tab))tab='me';
 
 const F={
 me(){const M=S.me;return`
@@ -120,11 +150,13 @@ me(){const M=S.me;return`
 course(){const P=progress();return`
  <div class="card"><div class="row" style="flex-wrap:nowrap"><div class="ring" style="--p:${P.pct}"><i>${P.pct}%</i></div>
  <div><h2>📚 내 학습 진도</h2><p style="margin:0">${P.n} / ${P.total}개 단원 완료</p><p class="hint" style="margin:2px 0 0">단원을 공부했으면 눌러서 체크하세요.</p></div></div></div>
+ <div class="card"><h2>📖 입문과정 교안으로 공부하기</h2><p class="hint">교안 「나는 사업주다」 입문 과정(8시간)을 단원별로 읽고, 퀴즈로 확인하세요.</p>
+ <div class="row"><button class="btn sm" data-unit="intro">🧭 과정 안내</button><button class="btn sm" data-unit="terms">📕 용어 색인</button><button class="btn sm" data-unit="wrap">🎓 마무리·초급 미리보기</button></div></div>
  <div class="card" style="background:linear-gradient(135deg,var(--violet-soft),var(--pri-soft))"><h2>⚖️ 정부지원금 사후관리 학습</h2><p style="margin:4px 0 10px">받은 뒤 지키는 법: 환수·참여제한·불복. 레슨, 퀴즈 45문항, 통보서 판별, 10계명, 판례 색인이 있습니다.</p><a class="btn pri" href="study.html">학습 시작하기 →</a></div>
  ${CATALOG.map((c,ci)=>{const on=c.mods.filter(m=>S.done[m.id]).length,pct=Math.round(on/c.mods.length*100),h=c.mods.reduce((a,m)=>a+m.h,0);
  return`<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">${['①','②','③','④'][ci]} ${esc(c.name)}</h2><span class="chip vio">${h}시간${c.mods.some(m=>m.est)?' (일부 추정)':''}</span></div>
  <p class="hint" style="margin:2px 0 8px">${esc(c.title)}</p><div class="bar ${on===c.mods.length?'teal':''}" aria-label="${esc(c.name)} 진도"><i style="width:${pct}%"></i></div><p class="hint" style="margin:4px 0 6px">${on}/${c.mods.length} 완료</p>
- ${c.mods.map(m=>`<label class="item ${S.done[m.id]?'on':''}"><input type="checkbox" data-done="${m.id}" ${S.done[m.id]?'checked':''}><span class="t"><b>${m.id}</b> ${esc(m.t)}<small>${m.est?'':m.h+'시간 · '}${esc(m.k||'')}${m.goal?' · 목표: '+esc(m.goal):''}${m.out?'<br>산출물: '+esc(m.out):''}</small></span></label>`).join('')}
+ ${c.mods.map(m=>{const has=COURSE.units.some(u=>u.id===m.id);return`<div class="item ${S.done[m.id]?'on':''}" style="cursor:default"><input type="checkbox" aria-label="${esc(m.id)} 학습 완료" data-done="${m.id}" ${S.done[m.id]?'checked':''}><div class="t"><b>${m.id}</b> ${esc(m.t)}<small>${m.est?'':m.h+'시간 · '}${esc(m.k||'')}${m.goal?' · 목표: '+esc(m.goal):''}${m.out?'<br>산출물: '+esc(m.out):''}</small>${has?`<div class="mt"><button class="btn sm pri" data-unit="${m.id}">📖 공부하기</button></div>`:'<small>📭 교안이 준비되면 추가됩니다</small>'}</div></div>`}).join('')}
  <p class="hint" style="margin-bottom:0">대표 산출물: ${esc(c.out)}</p></div>`}).join('')}`},
 
 notice(){const items=S.notices.map((x,n)=>({x,n})).sort((a,b)=>(a.x.deadline||'9999')<(b.x.deadline||'9999')?-1:1);return`
@@ -162,6 +194,7 @@ guide(){const C=S.guide.checks,n=GUIDE.checks.filter(c=>C[c[0]]).length;return`
  <div class="card"><h2>⚖️ 더 깊이 공부하기</h2><p>받은 뒤 지키는 법(환수·참여제한·불복)은 학습 페이지에서 레슨과 퀴즈로 공부하세요.</p><a class="btn pri" href="study.html">사후관리 학습 →</a></div>`},
 
 ask(){return Pack.cardHtml({withMe:true})},
+unit(){return unitHtml(UNIT)},
 
 data(){return`
  ${installCard()}
@@ -197,7 +230,7 @@ function live(){
  $('#tiles').innerHTML=`<div class="tile"><b>${P.pct}%</b><span>🌱 학습 진도</span></div><div class="tile"><b>${S.notices.length}</b><span>⭐ 관심 공고</span></div><div class="tile"><b>${soon}</b><span>⏰ 7일 안 마감</span></div>`;
  checkBadges()}
 function render(){
- $('#tabs').innerHTML=TABS.map(([id,ic,n])=>`<button role="tab" data-go="${id}" ${id===tab?'aria-current="page"':''}><span class="ic" aria-hidden="true">${ic}</span>${n}</button>`).join('');
+ $('#tabs').innerHTML=TABS.map(([id,ic,n])=>`<button role="tab" data-go="${id}" ${(id===tab||(tab==='unit'&&id==='course'))?'aria-current="page"':''}><span class="ic" aria-hidden="true">${ic}</span>${n}</button>`).join('');
  $('#main').innerHTML=F[tab]();if(POP)setTimeout(()=>{POP=''},900);live()}
 function go(t){tab=t;history.replaceState(null,'','#'+t);render();window.scrollTo(0,0)}
 
@@ -212,6 +245,9 @@ document.addEventListener('change',e=>{const el=e.target;
  if(el.dataset&&el.dataset.gcheck){if(el.checked)S.guide.checks[el.dataset.gcheck]=true;else delete S.guide.checks[el.dataset.gcheck];save();const y=scrollY;render();scrollTo(0,y)}
  if(el.id==='restore'&&el.files[0]){const r=new FileReader();r.onload=()=>{try{S=merge(fresh(),JSON.parse(r.result));save();render();toast('복원했습니다')}catch(x){toast('백업 파일을 읽지 못했습니다')}};r.readAsText(el.files[0]);el.value=''}});
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return}
+ const un=e.target.closest('[data-unit]');if(un){openUnit(un.dataset.unit);return}
+ const uq=e.target.closest('[data-uq]');if(uq){const [id,k,j]=uq.dataset.uq.split(':');(UQ[id]=UQ[id]||{})[+k]=+j;const y=scrollY;render();scrollTo(0,y);return}
+ const ur=e.target.closest('[data-uqreset]');if(ur){delete UQ[ur.dataset.uqreset];render();return}
  const el=e.target.closest('[data-act]');if(!el)return;const [a,arg]=el.dataset.act.split(':'),n=Number(arg);
  switch(a){
   case'addNotice':S.notices.push({title:'',agency:'',deadline:'',status:'검토',url:'',memo:''});save();render();break;
@@ -223,7 +259,7 @@ document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g
   case'backup':{const a2=document.createElement('a');a2.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a2.download=`edupang-backup-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a2);a2.click();a2.remove();break}
   case'reset':if(confirm('모든 입력을 지웁니다. 계속할까요?')){S=fresh();save();render();toast('초기화했습니다')}break;
  }});
-window.addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(t!==tab&&TABS.some(x=>x[0]===t)){tab=t;render()}});
+window.addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(t.startsWith('unit-')){UNIT=t.slice(5);tab='unit';render()}else if(t!==tab&&TABS.some(x=>x[0]===t)){tab=t;render()}});
 render();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>

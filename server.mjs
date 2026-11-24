@@ -10,6 +10,7 @@ const FILES = {
   '/style.css': ['style.css', 'text/css; charset=utf-8'],
   '/study-data.js': ['study-data.js', 'text/javascript; charset=utf-8'],
   '/pack.js': ['pack.js', 'text/javascript; charset=utf-8'],
+  '/course-data.js': ['course-data.js', 'text/javascript; charset=utf-8'],
   '/manifest.webmanifest': ['manifest.webmanifest', 'application/manifest+json; charset=utf-8'],
   '/sw.js': ['sw.js', 'text/javascript; charset=utf-8'],
   '/icons/icon.svg': ['icons/icon.svg', 'image/svg+xml'],

@@ -42,6 +42,50 @@ ${tbl(['교안의 정보','정책사업에서 쓰이는 곳','왜 필요한가']
 
 ${CATALOG.map(c=>`### ${c.name}: ${c.title}\n${tbl(['단원','제목','시간','학습구분','학습목표 / 산출물'],c.mods.map(m=>[m.id,m.t,m.h+'h'+(m.est?' (추정)':''),m.k||'',[m.goal,m.out].filter(Boolean).join(' / ')]))}\n대표 산출물: ${c.out}`).join('\n\n')}
 `}
+ function secMd(x){
+  const o=[`#### ${x.t}${x.sl?` (슬라이드 ${x.sl})`:''}`];
+  if(x.flow)o.push('흐름: '+x.flow.map(f=>f.replace('|',' — ')).join(' → '));
+  if(x.pts)o.push(x.pts.map(p=>'- '+p).join('\n'));
+  if(x.cal)o.push(x.cal.map(m=>`- ${m[0]}: ${m[1].map(i=>i[0]).join(' / ')||'—'}`).join('\n'));
+  (x.tables||[]).forEach(t=>o.push((t.title?`**${t.title}**\n`:'')+tbl(t.head,t.rows)));
+  if(x.story)o.push('사례: '+x.story);
+  if(x.tip)o.push('> 핵심: '+x.tip);
+  if(x.discuss)o.push('토론: '+x.discuss);
+  return o.join('\n\n')}
+ function unitsMd(){
+  const I=COURSE.intro;
+  return `## 2-2. 입문과정 교안 학습 내용 (교안 「나는 사업주다」 입문 과정 v0.6, 83장)
+
+교안의 세율·한도·요건은 교안이 밝힌 대로 강의 연도 기준 요약입니다. 실제 신고·신청 전에는 국세청·관할 기관 안내로 확인해야 합니다.
+
+### 과정 안내 (슬라이드 ${I.slides})
+이 과정을 마치면 할 수 있는 것:
+${I.goals.map((g,i)=>`${i+1}. ${g}`).join('\n')}
+
+${I.sections.map(secMd).join('\n\n')}
+
+${COURSE.units.map(u=>`### ${u.id} ${u.title} (${u.meta})
+이 단원을 마치면:
+${u.goals.map(g=>'- '+g).join('\n')}
+
+${u.sections.map(secMd).join('\n\n')}
+${u.practice?'\n#### 실습\n'+u.practice.map(p=>`- **${p.t}** (${p.time}) — 목표: ${p.goal} / 방법: ${p.steps} / 산출물: ${p.out}${p.note?' / '+p.note:''}`).join('\n'):''}
+
+#### ${u.id} 정리
+${u.summary.map((x,i)=>`${i+1}. ${x}`).join('\n')}
+자가 점검: ${u.selfCheck}`).join('\n\n')}
+
+### 입문 과정 마무리 (슬라이드 79~82)
+내가 만든 네 가지: ${COURSE.wrap.made.map(m=>m[0]+' '+m[1]).join(' / ')}
+다음 단계(초급 16시간): ${COURSE.wrap.next.map(n=>`${n[0]}(${n[1]}) ${n[2]}`).join(', ')}
+${COURSE.wrap.note}
+
+### 입문 과정 용어 색인
+${COURSE.terms.map(t=>`- **${t[0]}**: ${t[1]}`).join('\n')}
+
+### 입문 과정 확인 퀴즈 (정답 포함)
+${COURSE.units.map(u=>`**${u.id} ${u.title}**\n`+u.quiz.map((q,i)=>`${i+1}. ${q.q}\n${q.o.map((o,k)=>`   ${'①②③④'[k]} ${o}`).join('\n')}\n   - 정답: ${'①②③④'[q.a]} — ${q.e} (${q.r})`).join('\n')).join('\n\n')}
+`}
  function lessonMd(){
   return `## 3. 정부지원금 사후관리 레슨 (변호사 강의 교안, 52장)
 
@@ -92,7 +136,7 @@ ${tbl(['마감','공고','기관','링크'],(j.items||[]).map(x=>[x.deadline||'�
    return `## 10. 내 정보 (수강생이 직접 입력한 내용)\n${tbl(['항목','내용'],rows)}\n`}catch(e){return''}
  }
  async function build(opts={}){
-  const parts=[`# 정부지원금·정책사업 학습자료 (에듀팡파트너즈 수강생용)\n\n생성일 ${today()} · 출처: 강의교안 「나는 사업주다」 v0.6, 변호사 강의 「정부지원금, 받는 것보다 ‘지키는 것’이 더 어렵습니다」\n`,INSTRUCTION,guideMd(),courseMd(),lessonMd(),toolsMd(),quizMd(),await noticesMd()];
+  const parts=[`# 정부지원금·정책사업 학습자료 (에듀팡파트너즈 수강생용)\n\n생성일 ${today()} · 출처: 강의교안 「나는 사업주다」 v0.6, 변호사 강의 「정부지원금, 받는 것보다 ‘지키는 것’이 더 어렵습니다」\n`,INSTRUCTION,guideMd(),courseMd(),unitsMd(),lessonMd(),toolsMd(),quizMd(),await noticesMd()];
   if(opts.includeMe){const m=meMd();if(m)parts.push(m)}
   return parts.join('\n');
  }

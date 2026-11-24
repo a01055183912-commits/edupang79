@@ -130,3 +130,19 @@ body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
 .bd.pop{animation:pop .6s ease}
 @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.mascot,.bd.pop{animation:none}}
+/* 교안 학습 화면 */
+.story{background:var(--violet-soft);border-left:6px solid var(--violet);border-radius:10px;padding:10px 14px;margin:10px 0}
+.story b,.disc b{display:block;margin-bottom:2px}
+.disc{background:var(--teal-soft);border-left:6px solid var(--teal);border-radius:10px;padding:10px 14px;margin:10px 0}
+.sec{padding:14px 0;border-top:1px solid var(--line)}.sec:first-of-type{border-top:0}
+.sec h3{margin:0 0 6px;font-size:1.08rem;line-height:1.4}
+.cal{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}
+@media(min-width:620px){.cal{grid-template-columns:repeat(3,1fr)}}@media(min-width:900px){.cal{grid-template-columns:repeat(4,1fr)}}
+.cm{border:1.5px solid var(--line);border-radius:12px;padding:8px 8px 6px;background:var(--card);min-height:70px}
+.cm>b{display:block;margin-bottom:2px;font-size:.95rem}
+.ci{display:block;font-size:.8rem;border-radius:8px;padding:3px 7px;margin:3px 0;line-height:1.35}
+.ci.y{background:var(--amber-soft);color:var(--amber)}.ci.g{background:var(--teal-soft);color:var(--teal)}.ci.b{background:var(--pri-soft);color:var(--pri)}
+.legend{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.goal{display:flex;gap:10px;align-items:flex-start;padding:8px 0}.goal i{font-style:normal;font-weight:800;color:var(--pri);flex:none}
+.unitnav{display:flex;gap:10px;justify-content:space-between;margin-top:6px}
+.sum li{margin:.5em 0;font-weight:600}
