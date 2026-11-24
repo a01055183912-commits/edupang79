@@ -93,7 +93,7 @@ const CATALOG=[
   {id:'4-4',t:'공공조달·입찰',h:3,est:1},{id:'4-5',t:'지배구조·리스크',h:3,est:1},{id:'4-6',t:'성장 전략·투자',h:3,est:1},{id:'4-7',t:'캡스톤',h:3,est:1}]}
 ];
 const MODS=CATALOG.flatMap(c=>c.mods.map(m=>({...m,cid:c.id,cname:c.name})));
-const SITES=[['부산소상공인지원센터 사업공고','https://bsbsc.kr/posting'],['부산테크노파크 사업공고','https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16'],['부산기술창업투자원 사업공고','https://www.bsia.or.kr/board?mcode=an021'],['부산정보산업진흥원 사업공고','https://bipa.kr/board/business/list'],['부산창조경제혁신센터 프로그램','https://ccei.creativekorea.or.kr/busan/service/program_list.do?&page=1'],['부산관광기업지원센터 공지사항','https://tourbiz.bto.or.kr/kor/CMS/Board/Board.do?mCode=MN032&mgr_seq=6'],['부산디자인진흥원 고시/공고','https://dcb.or.kr/01_news/?mcode=0401010000']];
+const SITES=[['부산소상공인지원센터 사업공고','https://bsbsc.kr/posting'],['부산테크노파크 사업공고','https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16'],['부산기술창업투자원 사업공고','https://www.bsia.or.kr/board?mcode=an021'],['부산정보산업진흥원 사업공고','https://bipa.kr/board/business/list'],['부산창조경제혁신센터 프로그램','https://ccei.creativekorea.or.kr/busan/service/program_list.do?&page=1'],['부산경제진흥원','https://www.bepa.kr/'],['부산관광기업지원센터 공지사항','https://tourbiz.bto.or.kr/kor/CMS/Board/Board.do?mCode=MN032&mgr_seq=6'],['부산디자인진흥원 고시/공고','https://dcb.or.kr/01_news/?mcode=0401010000']];
 const STATUS=['검토','준비중','제출','선정','탈락','보류'];
 
 const DEFAULT_TPL=`# {{사업명}} 운영 계획(안)
