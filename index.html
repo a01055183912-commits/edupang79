@@ -93,6 +93,7 @@ const CATALOG=[
   {id:'4-4',t:'공공조달·입찰',h:3,est:1},{id:'4-5',t:'지배구조·리스크',h:3,est:1},{id:'4-6',t:'성장 전략·투자',h:3,est:1},{id:'4-7',t:'캡스톤',h:3,est:1}]}
 ];
 const MODS=CATALOG.flatMap(c=>c.mods.map(m=>({...m,cid:c.id,cname:c.name})));
+const SITES=[['부산소상공인지원센터 사업공고','https://bsbsc.kr/posting'],['부산테크노파크 사업공고','https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16'],['부산기술창업투자원 사업공고','https://www.bsia.or.kr/board?mcode=an021'],['부산관광기업지원센터','https://tourbiz.bto.or.kr/kor/Main.do']];
 const STATUS=['검토','준비중','제출','선정','탈락','보류'];
 
 const DEFAULT_TPL=`# {{사업명}} 운영 계획(안)
@@ -299,6 +300,8 @@ notice(){const items=S.notices.map((x,n)=>({x,n})).sort((a,b)=>(a.x.deadline||'9
  <div class="card"><h2>새로 수집된 공고</h2><p class="hint">매일 아침 7시에 부산 지원기관 사이트에서 자동 수집한 접수 중 공고입니다. 접수 기한과 자격은 반드시 공고문에서 확인하세요.</p>
  <label>검색<input data-feedq placeholder="제목·사업명·기관 (예: 교육, 창업)" value="${esc(FEEDQ)}"></label>
  <div data-live="feed" class="mt"></div></div>
+ <div class="card"><h2>기관 사이트 바로가기</h2><p class="hint">공고 게시판으로 바로 이동합니다. 새 창에서 열립니다.</p>
+ <div class="row">${SITES.map(x=>`<a class="btn" href="${esc(x[1])}" target="_blank" rel="noopener noreferrer">${esc(x[0])}</a>`).join('')}</div></div>
  <div class="card"><h2>내 공고 관리</h2><p class="hint">관심 공고를 모아 마감일(D-day)을 관리합니다. 마감 임박 순으로 보입니다.</p>
  ${items.map(({x,n})=>`<div class="card" style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><div>${ddayChip(x.deadline)}<span class="chip">${esc(x.status||'검토')}</span></div>
   <div class="row"><button class="btn sm" data-act="mkProject:${n}">이 공고로 사업 설정</button><button class="btn sm del" data-act="delNotice:${n}">삭제</button></div></div>
