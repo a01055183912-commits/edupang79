@@ -144,6 +144,29 @@ async function tourbiz() {
   return out;
 }
 
+/* ---- 부산디자인진흥원: 고시/공고 게시판. 접수 마감일이 따로 없어 최근 120일 안의 '공고·진행' 글만 본다 ---- */
+async function dcb() {
+  const out = [];
+  const since = new Date(new Date(today() + 'T00:00:00Z').getTime() - 120 * 864e5).toISOString().slice(0, 10);
+  for (const page of [1, 2]) {
+    const h = await get(`https://dcb.or.kr/01_news/?mcode=0401010000&page=${page}`);
+    const rows = h.split(/<tr\b/).slice(1).filter(r => r.includes('mode=2&no='));
+    if (!rows.length) { if (page === 1) throw new Error('게시판 행을 찾지 못했습니다 (구조 변경 또는 차단)'); break; }
+    for (const r of rows) {
+      if (/class="ntc"/.test(r)) continue; // 상단 고정 글은 오래된 안내가 대부분이라 제외
+      const no = (r.match(/mode=2&no=(\d+)/) || [])[1];
+      const kind = decode((r.match(/class="case">([\s\S]*?)<\/td>/) || [])[1] || '');
+      const title = decode((r.match(/class="link">\s*<a[^>]*>([\s\S]*?)<\/a>/) || [])[1] || '');
+      const date = (r.match(/class="date">(\d{4}-\d{2}-\d{2})/) || [])[1] || '';
+      if (!no || !title || kind !== '공고' || !/st_ing/.test(r) || date < since) continue;
+      if (!/모집|공모|신청|참가|참여|지원/.test(title) || /입찰|채용|결과|계약|용역|평가위원|제안서/.test(title)) continue;
+      out.push({ id: 'dcb-' + no, title, program: '', start: date, deadline: '', url: `https://dcb.or.kr/01_news/?mcode=0401010000&mode=2&no=${no}` });
+    }
+    await sleep(800);
+  }
+  return out;
+}
+
 const SOURCES = [
   { id: 'bsbsc', name: '부산소상공인지원센터', run: bsbsc },
   { id: 'btp', name: '부산테크노파크', run: btp },
@@ -151,6 +174,7 @@ const SOURCES = [
   { id: 'bipa', name: '부산정보산업진흥원', run: bipa },
   { id: 'ccei', name: '부산창조경제혁신센터', run: ccei },
   { id: 'tourbiz', name: '부산관광기업지원센터', run: tourbiz },
+  { id: 'dcb', name: '부산디자인진흥원', run: dcb },
 ];
 
 let prev = { items: [], sources: [] };

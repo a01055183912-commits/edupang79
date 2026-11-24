@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-25T02:15:19+09:00",
+ "updatedAt": "2026-11-25T02:16:13+09:00",
  "sources": [
   {
    "id": "bsbsc",
@@ -36,6 +36,12 @@
    "name": "부산관광기업지원센터",
    "ok": true,
    "count": 1
+  },
+  {
+   "id": "dcb",
+   "name": "부산디자인진흥원",
+   "ok": true,
+   "count": 0
   }
  ],
  "items": [

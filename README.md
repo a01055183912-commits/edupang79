@@ -9,7 +9,7 @@
 - 사업자등록번호·주소·생년월일 등 민감 정보는 파일에 넣지 않았습니다.
 
 ## 공고 자동 수집
-- `scripts/collect.mjs`가 부산소상공인지원센터(공개 API)와 부산테크노파크(사업공고 게시판)의 접수 중 공고를 `data/notices.json`에 저장합니다.
+- `scripts/collect.mjs`가 부산소상공인지원센터·테크노파크·기술창업투자원·정보산업진흥원·창조경제혁신센터·관광기업지원센터·디자인진흥원의 접수 중 공고를 `data/notices.json`에 저장합니다.
 - `.github/workflows/collect.yml`이 매일 07:00(KST)에 실행합니다. Actions 탭에서 `collect-notices` → Run workflow로 수동 실행도 됩니다.
 - 기관별로 실패해도 나머지는 계속 수집하며, 실패한 기관은 이전 결과를 유지하고 「공고」 탭에 "수집 실패"를 표시합니다.
 - 기관을 늘리려면 `SOURCES`에 `{id, name, run}`을 추가하세요. `run`은 `{id,title,program,start,deadline,url}` 배열을 돌려줍니다.
