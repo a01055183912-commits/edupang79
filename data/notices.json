@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-25T01:53:19+09:00",
+ "updatedAt": "2026-11-25T01:59:31+09:00",
  "sources": [
   {
    "id": "bsbsc",
@@ -12,6 +12,12 @@
    "name": "부산테크노파크",
    "ok": true,
    "count": 21
+  },
+  {
+   "id": "bsia",
+   "name": "부산기술창업투자원",
+   "ok": true,
+   "count": 3
   }
  ],
  "items": [
@@ -104,6 +110,28 @@
    "firstSeen": "2026-11-25"
   },
   {
+   "id": "bsia-1052",
+   "title": "2026년 의료·헬스케어 스타트업 인큐베이터 조성사업 입주기업 모집 안내",
+   "program": "부산대학교병원",
+   "start": "2026-11-02",
+   "deadline": "2026-11-30",
+   "url": "https://www.bsia.or.kr/board?mcode=an021&pcon=3&bd_idx=1052",
+   "source": "bsia",
+   "sourceName": "부산기술창업투자원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bsia-1062",
+   "title": "우리금융그룹 2027년「디노랩 부산센터」모집 공고",
+   "program": "우리금융그룹",
+   "start": "2026-11-13",
+   "deadline": "2026-12-06",
+   "url": "https://www.bsia.or.kr/board?mcode=an021&pcon=3&bd_idx=1062",
+   "source": "bsia",
+   "sourceName": "부산기술창업투자원",
+   "firstSeen": "2026-11-25"
+  },
+  {
    "id": "btp-9581897",
    "title": "수정부산 첨단신발융합허브센터(감전단지) 입주기업 모집공고(상시)",
    "program": "",
@@ -189,6 +217,17 @@
    "url": "https://bsbsc.kr/posting/445",
    "source": "bsbsc",
    "sourceName": "부산소상공인지원센터",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "bsia-1065",
+   "title": "2027년 상반기 KDB NextONE 부산 6기 모집",
+   "program": "한국산업은행",
+   "start": "2026-11-18",
+   "deadline": "2026-12-18",
+   "url": "https://www.bsia.or.kr/board?mcode=an021&pcon=3&bd_idx=1065",
+   "source": "bsia",
+   "sourceName": "부산기술창업투자원",
    "firstSeen": "2026-11-25"
   },
   {

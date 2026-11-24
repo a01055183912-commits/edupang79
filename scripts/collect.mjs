@@ -57,9 +57,27 @@ async function btp() {
   return out;
 }
 
+/* ---- 부산기술창업투자원: 사업공고 > 유관기관 공고(an021) ---- */
+async function bsia() {
+  const h = await get('https://www.bsia.or.kr/board?mcode=an021');
+  const out = [];
+  const rows = h.split(/<tr\b/).slice(1).filter(r => r.includes('bd_idx='));
+  if (!rows.length) throw new Error('게시판 행을 찾지 못했습니다 (구조 변경 또는 차단)');
+  for (const r of rows) {
+    const idx = (r.match(/bd_idx=(\d+)/) || [])[1];
+    const title = decode((r.match(/title="상세보기로 이동">([\s\S]*?)<\/a>/) || [])[1] || '').replace(/^(진행중|종료|마감)\s*/, '').replace(/^N\s+/, '');
+    const per = r.match(/(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})/);
+    const org = decode((r.match(/class="author">([\s\S]*?)<\/td>/) || [])[1] || '');
+    if (!idx || !title || !per || !/진행중/.test(r)) continue;
+    out.push({ id: 'bsia-' + idx, title, program: org, start: per[1], deadline: per[2], url: `https://www.bsia.or.kr/board?mcode=an021&pcon=3&bd_idx=${idx}` });
+  }
+  return out;
+}
+
 const SOURCES = [
   { id: 'bsbsc', name: '부산소상공인지원센터', run: bsbsc },
   { id: 'btp', name: '부산테크노파크', run: btp },
+  { id: 'bsia', name: '부산기술창업투자원', run: bsia },
 ];
 
 let prev = { items: [], sources: [] };
