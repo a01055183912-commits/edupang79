@@ -144,7 +144,7 @@ const fresh=()=>({v:1,
  project:{name:'',agency:'',target:'',headcount:20,period:'',venue:'',hoursPerDay:8,background:'',effect:''},
  sel:{'1-1':true,'1-2':true,'1-3':true,'1-4':true},mh:{},
  price:{main:100000,assist:0,assistN:0,material:10000,ops:50000,mgmt:10,vat:false},
- extra:[],notices:[],tpl:null,
+ extra:[],notices:[],tpl:null,guide:{checks:{}},
  company:{name:'에듀팡파트너즈',rep:'김미연',bizNo:'',openDate:'2024-10-22',bizType:'교육서비스업(기타 교육지원 서비스업) 외',address:'',phone:'',email:'',
   intro:'AI·디지털 활용, 진로·취업, 인문학·리더십, 조직 소통·경제, 법정의무 교육을 학교·기업·공공기관·복지 현장에 맞춰 설계하고 운영합니다. 기관 특성에 맞는 커리큘럼 설계를 강점으로 합니다.',
   record:'- 기업: 한화오션 AX 수용성 워크숍, 현대일렉트릭 AI 활용, 롯데 청년직무아카데미 LIFT, 배달의민족 배민아카데미, BTX모빌리티 Claude 활용 교육\n- 공공·대학: 구미전자정보기술원, 조선대학교, 경상북도 신전략 프로젝트 포럼, 부산시인재개발원, 광주시청, 울산남구청 일자리종합센터, 영도구청, 울산여성일자리\n- 진로·인문학·팀빌딩: 성균관대·동서대·대구대 모의면접, 국회도서관·부산시청·한국수력원자력 리더십 인문학, 현대미포조선·한진중공업 팀빌딩\n- 2026.11 여수 AI 창업 아이디어 해커톤 AI 활용 교육(90분)\n- 2026.9 과기정통부 소프트웨어 인재키움 바이브코딩 창업교육 Demo Day 심사'},
@@ -160,6 +160,7 @@ function merge(base,src){ // 알려진 키만 받아 들인다
  if(src.company&&typeof src.company==='object') for(const f of Object.keys(base.company)) if(typeof src.company[f]==='string') base.company[f]=src.company[f];
  for(const k of ['extra','instructors','notices']) if(Array.isArray(src[k])) base[k]=src[k].filter(x=>x&&typeof x==='object');
  if(typeof src.tpl==='string') base.tpl=src.tpl;
+ if(src.guide&&src.guide.checks&&typeof src.guide.checks==='object') for(const [k,v] of Object.entries(src.guide.checks)) if(/^[a-z0-9]{1,8}$/.test(k)&&v===true) base.guide.checks[k]=true;
  return base}
 let saveFail=false;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){if(!saveFail){saveFail=true;toast('브라우저 저장이 막혀 있습니다. 「데이터」 탭에서 백업 파일을 받아 두세요.')}}}
@@ -225,7 +226,7 @@ function renderDoc(){
  return{text,miss:[...new Set(miss)]}}
 
 /* ===== 화면 ===== */
-const TABS=[['project','사업 설정'],['course','과정 편성'],['inst','강사'],['budget','예산'],['notice','공고'],['doc','제안서'],['data','데이터']];
+const TABS=[['project','사업 설정'],['course','과정 편성'],['inst','강사'],['budget','예산'],['notice','공고'],['doc','제안서'],['guide','참고 가이드'],['data','데이터']];
 let FEED=null,FEEDERR='',FEEDQ='';
 fetch('data/notices.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(j=>{FEED=j;if(tab==='notice')live()})
  .catch(()=>{FEEDERR='수집된 공고를 불러오지 못했습니다. 웹 주소(GitHub Pages)로 열었을 때만 보입니다.';if(tab==='notice')live()});
@@ -321,6 +322,35 @@ doc(){return`
  <textarea style="min-height:260px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px" data-tpl>${esc(S.tpl??DEFAULT_TPL)}</textarea>
  <div class="row mt"><button class="btn sm" data-act="resetTpl">기본 서식으로 되돌리기</button></div></div>`},
 
+guide(){return`
+ <div class="card"><h2>이 가이드는 무엇인가요</h2><p class="hint" style="margin:0">정책사업을 신청·제안할 때 <b>어떤 정보를 갖고 있어야 하는지</b>를 이 도구의 화면과 연결해 설명합니다. 내용은 강의교안 「나는 사업주다」 v0.6의 1-2 단원(공고문과 양식, 시행지침) 등을 참고했고, 아래 「교안 참고」는 해당 교안의 위치입니다.</p></div>
+ <div class="card"><h2>1. 지침 → 공고 → 양식: 정보는 어디서 오나</h2>
+ <p style="margin:6px 0">지원사업은 <b>운영지침 → 공고문 → 신청 양식</b> 순서로 정해집니다.</p>
+ <ul style="margin:6px 0;padding-left:20px"><li>지원 자격, 사업비 사용 기준, 정산 방법은 <b>운영지침</b>에서 나옵니다. 공고문의 근거 항목에서 지침 이름을 찾으세요.</li>
+ <li>양식(사업계획서)은 지침의 <b>평가 기준</b>을 따라 씁니다. 배점이 큰 항목에 분량을 더 씁니다.</li>
+ <li>지침은 해마다 바뀔 수 있으니 <b>최신본</b>인지 확인합니다.</li></ul>
+ <p class="hint">교안 참고: 입문 1-2 「사업자가 가장 자주 접하는 것: 시행지침」, 「사례분석: 공고문과 양식은 이렇게 생겼다」</p></div>
+ <div class="card"><h2>2. 공고를 볼 때 확인할 것</h2><p class="hint">공고 하나를 열어 놓고 체크해 보세요. 모두 확인되면 신청 여부를 판단할 수 있습니다. (체크 상태는 이 브라우저에 저장됩니다)</p>
+ <label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:14px"><input type="checkbox" data-bind="guide.checks.g1" ${S.guide.checks.g1?'checked':''}><span><b>사업 목적·근거</b> · 근거 법령과 운영지침 이름을 찾았다</span></label><label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:14px"><input type="checkbox" data-bind="guide.checks.g2" ${S.guide.checks.g2?'checked':''}><span><b>지원 대상·자격</b> · 업력·지역·업종·대표 요건이 우리 기관과 맞는다</span></label><label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:14px"><input type="checkbox" data-bind="guide.checks.g3" ${S.guide.checks.g3?'checked':''}><span><b>제외 대상</b> · 체납·중복 수혜·휴폐업에 해당하지 않는다</span></label><label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:14px"><input type="checkbox" data-bind="guide.checks.g4" ${S.guide.checks.g4?'checked':''}><span><b>지원 내용·규모</b> · 지원 금액·기간·자부담 비율을 확인했다</span></label><label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:14px"><input type="checkbox" data-bind="guide.checks.g5" ${S.guide.checks.g5?'checked':''}><span><b>평가 방법</b> · 서류·발표 여부와 배점표를 확인했다</span></label><label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink);font-size:14px"><input type="checkbox" data-bind="guide.checks.g6" ${S.guide.checks.g6?'checked':''}><span><b>신청 방법·일정</b> · 마감 일시와 제출 서류 목록을 확인했다</span></label>
+ <div class="row mt"><button class="btn sm" data-act="clearChecks">체크 모두 해제</button><button class="btn sm" data-act="go:notice">공고 목록으로</button></div>
+ <p class="hint mt" style="margin-bottom:0">우리 기관의 업력·지역·업종은 「사업 설정」의 수행 기관 정보와 비교해 보세요. 이 도구의 수집 공고는 확인용이므로 접수 기한과 자격은 공고문 원문이 기준입니다.</p></div>
+ <div class="card"><h2>3. 제출 서류와 이 도구에서 준비되는 부분</h2>
+ <table><thead><tr><th>양식</th><th>작성 포인트</th><th>이 도구에서</th></tr></thead><tbody><tr><td><b>신청서</b></td><td>기업·대표 기본 정보</td><td>이 도구의 「사업 설정」·「수행 기관 정보」</td></tr><tr><td><b>사업계획서</b></td><td>문제인식 · 실현가능성 · 성장전략 · 팀 구성</td><td>「제안서」 탭 초안, 「강사」 탭 약력</td></tr><tr><td><b>사업비 계획</b></td><td>항목별 금액, 자부담 포함</td><td>「예산」 탭</td></tr><tr><td><b>개인정보 동의서</b></td><td>대표 서명</td><td></td></tr><tr><td><b>서약서·확인서</b></td><td>중복 수혜·체납 없음 확인</td><td></td></tr><tr><td><b>증빙 서류</b></td><td>사업자등록증 · 인증서 등</td><td></td></tr></tbody></table>
+ <p class="hint mt" style="margin-bottom:0">정보가 비어 있으면 「제안서」 탭 상단에 "입력 필요" 항목으로 표시됩니다. 먼저 그 항목부터 채우세요.</p></div>
+ <div class="card"><h2>4. 신청 전에 갖춰 두면 좋은 정보</h2>
+ <table><thead><tr><th>정보</th><th>쓰이는 곳</th><th>입력 위치</th></tr></thead><tbody>
+ <tr><td>상호·대표·개업일(업력)·업종</td><td>자격 요건(업력·업종) 확인, 신청서</td><td>사업 설정 › 수행 기관 정보</td></tr>
+ <tr><td>사업자등록증 등 증빙 사본</td><td>증빙 서류</td><td>파일로 따로 보관 (이 도구에는 저장하지 않음)</td></tr>
+ <tr><td>교육 대상·인원·기간·장소</td><td>사업계획서, 예산 산출</td><td>사업 설정</td></tr>
+ <tr><td>수행 실적·강사 약력</td><td>사업계획서의 실현가능성·팀 구성</td><td>수행 기관 정보, 강사 탭</td></tr>
+ <tr><td>단가 기준(강사료·교재비·일반관리비율)과 자부담 비율</td><td>사업비 계획</td><td>예산 탭 (자부담은 기타 항목으로 기록)</td></tr>
+ <tr><td>마감 일시·제출 서류 목록</td><td>일정 관리</td><td>공고 탭 (마감일·메모)</td></tr></tbody></table></div>
+ <div class="card"><h2>5. 함께 보면 좋은 교안 단원</h2>
+ <ul style="margin:0;padding-left:20px"><li><b>입문 1-2</b> 사업과 행정·법률의 관계: 지침·공고문·양식 읽기</li>
+ <li><b>초급 2-7</b> 재원 확보 1, <b>중급 3-3</b> 지원사업 유치, <b>3-1</b> 사업계획 수립: 지원사업 계획서 작성 (중급 대표 산출물: 사업계획서·지원사업 계획서·3년 자금계획)</li>
+ <li><b>입문 1-4</b> 사업자의 세금 첫걸음: 지원금·정산과 맞물리는 세무 일정</li></ul>
+ <p class="hint mt" style="margin-bottom:0">이 탭의 내용은 교안의 일반적인 설명을 바탕으로 한 안내입니다. 실제 공고의 요건은 해당 공고문과 운영지침이 기준입니다.</p></div>`},
+
 data(){return`
  <div class="card"><h2>백업·복원</h2><p class="hint">데이터는 이 브라우저에만 있습니다. 브라우저 기록을 지우거나 다른 PC에서 쓰려면 백업 파일을 받아 두세요.</p>
  <div class="row"><button class="btn pri" data-act="backup">백업 파일 받기 (JSON)</button><label class="btn" style="margin:0">복원<input type="file" id="restore" accept=".json" hidden></label></div></div>
@@ -391,6 +421,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if
   case'addExtra':S.extra.push({name:'',amount:0});save();render();break;
   case'delExtra':S.extra.splice(n,1);save();render();break;
   case'watch':{const x=(FEED&&FEED.items||[]).find(i=>i.id===arg);if(x&&!S.notices.some(n=>n.url===x.url)){S.notices.push({title:x.title,agency:x.sourceName,deadline:x.deadline||'',status:'검토',url:x.url,memo:x.program||''});save();render();toast('내 공고에 등록했습니다')}break}
+  case'clearChecks':S.guide.checks={};save();render();break;
   case'addNotice':S.notices.push({title:'',agency:'',deadline:'',status:'검토',url:'',memo:''});save();render();break;
   case'delNotice':if(confirm('이 공고를 삭제할까요?')){S.notices.splice(n,1);save();render()}break;
   case'mkProject':{const x=S.notices[n];if(x){S.project.name=x.title||S.project.name;S.project.agency=x.agency||S.project.agency;save();go('project');toast('공고 정보를 사업 설정에 넣었습니다')}break}
