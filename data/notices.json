@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-25T02:05:53+09:00",
+ "updatedAt": "2026-11-25T02:08:59+09:00",
  "sources": [
   {
    "id": "bsbsc",
@@ -24,6 +24,12 @@
    "name": "부산정보산업진흥원",
    "ok": true,
    "count": 11
+  },
+  {
+   "id": "ccei",
+   "name": "부산창조경제혁신센터",
+   "ok": true,
+   "count": 2
   }
  ],
  "items": [
@@ -91,6 +97,17 @@
    "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582673",
    "source": "btp",
    "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "ccei-10600",
+   "title": "2026년 카카오클래스: AI 비즈니스 실전 과정 수강 신청 안내(~11. 27.(금))",
+   "program": "카카오클래스",
+   "start": "2026-09-18",
+   "deadline": "2026-11-27",
+   "url": "https://ccei.creativekorea.or.kr/busan/service/program_view.do?no=10600&sMenuType=00040001",
+   "source": "ccei",
+   "sourceName": "부산창조경제혁신센터",
    "firstSeen": "2026-11-25"
   },
   {
@@ -465,6 +482,17 @@
    "url": "https://www.btp.or.kr/kor/CMS/Board/Board.do?mCode=MN013&mgr_seq=16&mode=view&board_seq=9582246",
    "source": "btp",
    "sourceName": "부산테크노파크",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "ccei-9280",
+   "title": "\"스타트 오픈이노베이션 창구\" 오픈이노베이션 협업 수요 등록 기업 상시 모집",
+   "program": "부산창조경제혁신센터",
+   "start": "2022-09-01",
+   "deadline": "",
+   "url": "https://ccei.creativekorea.or.kr/busan/service/program_view.do?no=9280&sMenuType=00040001",
+   "source": "ccei",
+   "sourceName": "부산창조경제혁신센터",
    "firstSeen": "2026-11-25"
   }
  ]

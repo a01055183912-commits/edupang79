@@ -97,11 +97,36 @@ async function bipa() {
   return out;
 }
 
+/* ---- 부산창조경제혁신센터: 프로그램 목록 내부 API에서 유형이 '사업공고'인 것만 ---- */
+async function ccei() {
+  const body = 'sMenuType=00040001&pn=1&pagePerContents=30&cntry_nm=busan';
+  let txt, err;
+  for (let i = 0; i < 3 && !txt; i++) {
+    try {
+      const r = await fetch('https://ccei.creativekorea.or.kr/busan/json/service/programLists.json', { method: 'POST', body,
+        headers: { 'User-Agent': UA, 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' }, signal: AbortSignal.timeout(25000) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      txt = await r.text();
+    } catch (e) { err = e; await sleep(1500 * (i + 1)); }
+  }
+  if (!txt) throw err;
+  const list = JSON.parse(txt)?.result?.list;
+  if (!Array.isArray(list)) throw new Error('응답 형식이 바뀐 것 같습니다 (result.list 없음)');
+  const dash = x => String(x || '').replace(/\./g, '-');
+  return list.filter(p => p.TYPE_NM === '사업공고').map(p => {
+    const end = dash(p.C_EDATE);
+    return { id: 'ccei-' + p.SEQ, title: String(p.PROGRAM_TITLE || '').trim(), program: p.PLACE || '', start: dash(p.C_SDATE),
+      deadline: end && end < '2030-01-01' ? end : '', // 2030년 이후는 상시 모집으로 보고 마감 미정 처리
+      url: `https://ccei.creativekorea.or.kr/busan/service/program_view.do?no=${p.SEQ}&sMenuType=00040001` };
+  });
+}
+
 const SOURCES = [
   { id: 'bsbsc', name: '부산소상공인지원센터', run: bsbsc },
   { id: 'btp', name: '부산테크노파크', run: btp },
   { id: 'bsia', name: '부산기술창업투자원', run: bsia },
   { id: 'bipa', name: '부산정보산업진흥원', run: bipa },
+  { id: 'ccei', name: '부산창조경제혁신센터', run: ccei },
 ];
 
 let prev = { items: [], sources: [] };
