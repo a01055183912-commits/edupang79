@@ -7,6 +7,9 @@ const FILES = {
   '/': ['index.html', 'text/html; charset=utf-8'],
   '/index.html': ['index.html', 'text/html; charset=utf-8'],
   '/study.html': ['study.html', 'text/html; charset=utf-8'],
+  '/style.css': ['style.css', 'text/css; charset=utf-8'],
+  '/study-data.js': ['study-data.js', 'text/javascript; charset=utf-8'],
+  '/pack.js': ['pack.js', 'text/javascript; charset=utf-8'],
   '/data/notices.json': ['data/notices.json', 'application/json; charset=utf-8'],
 };
 
