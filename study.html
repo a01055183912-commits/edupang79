@@ -4,12 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#6d3df0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="정책사업 학습">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>정부지원금 사후관리 학습</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="hero" style="background:linear-gradient(135deg,#6d3df0 0%,#2563eb 100%)"><div class="wrap">
-  <h1>⚖️ 정부지원금, 받은 뒤 지키는 법</h1>
+  <div class="brand"><img class="mascot" src="icons/icon.svg" alt="" width="60" height="60"><h1>정부지원금, 받은 뒤 지키는 법</h1></div>
   <p>변호사 강의 교안(120분, 52장)을 공부용으로 정리했습니다. 레슨 → 퀴즈 → 판별 연습 → 암기 순서로 공부하세요. <a href="index.html">← 학습·준비 도구</a></p>
   <div class="tiles" id="tiles"></div>
 </div></header>
@@ -28,7 +35,7 @@ try{const r=JSON.parse(localStorage.getItem(KEY)||'null');if(r&&typeof r==='obje
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=s=>document.querySelector(s);
-const TABS=[['guide','🧭','길잡이'],['lesson','📖','레슨'],['quiz','✏️','퀴즈'],['notice','📮','통보서'],['ten','🔟','10계명'],['case','🏛️','판례'],['gloss','📕','용어'],['ask','💬','Claude']];
+const TABS=[['guide','🐾','길잡이'],['lesson','📚','레슨'],['quiz','🎯','퀴즈'],['notice','💌','통보서'],['ten','🎀','10계명'],['case','⚖️','판례'],['gloss','🍓','용어'],['ask','✨','Claude']];
 let tab=(location.hash||'#guide').slice(1);if(!TABS.some(t=>t[0]===tab))tab='guide';
 Pack.onMsg=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(Pack._t);Pack._t=setTimeout(()=>t.classList.remove('on'),2800)};
 let Q=null; // 진행 중 퀴즈
@@ -74,7 +81,7 @@ quiz(){
   <div class="row" style="margin-top:10px"><button class="btn pri" data-qstart="1">시작</button>${P.wrong.length?`<button class="btn" data-qstart="wrong">틀린 문제만 다시 (${P.wrong.length})</button>`:''}</div>
   ${P.last?`<p class="hint" style="margin-top:10px">지난 결과: ${P.last.s}/${P.last.n} · 최고 ${P.best}점(100점 만점)</p>`:''}</div>`}
  if(Q.i>=Q.list.length){const pct=Math.round(Q.ok/Q.list.length*100);
-  return`<div class="card"><h2>결과</h2><p style="font-size:20px;margin:6px 0"><b>${Q.ok} / ${Q.list.length}</b> (${pct}점)</p>
+  return`<div class="card"><h2>${pct>=80?'🎉':pct>=50?'💪':'📖'} 결과</h2><p style="font-size:20px;margin:6px 0"><b>${Q.ok} / ${Q.list.length}</b> (${pct}점)</p>
   <p class="hint">${pct>=80?'잘하셨습니다. 틀린 문제는 해당 레슨을 다시 읽어 보세요.':'레슨을 다시 읽고 틀린 문제만 다시 풀어 보세요.'}</p>
   ${Q.bad.length?`<h3>틀린 문제</h3><ul>${Q.bad.map(q=>`<li>${esc(q.q)} <span class="chip">${esc(q.r)}</span></li>`).join('')}</ul>`:''}
   <div class="row"><button class="btn pri" data-qstart="1">다시 풀기</button><button class="btn" data-qreset="1">범위 다시 고르기</button></div></div>`}
@@ -107,7 +114,7 @@ function renderGloss(){const q=($('#gq')?.value||'').trim();const list=GLOSS.fil
  $('#glist').innerHTML=list.length?list.map(g=>`<div class="fc"><b>${esc(g[0])}</b><p style="margin:4px 0 0">${esc(g[1])}</p></div>`).join(''):'<p class="hint">검색 결과가 없습니다.</p>'}
 function render(){
  $('#tabs').innerHTML=TABS.map(([id,ic,n])=>`<button role="tab" data-go="${id}" ${id===tab?'aria-current="page"':''}><span class="ic" aria-hidden="true">${ic}</span>${n}</button>`).join('');
- const nd=LESSONS.filter(l=>P.done[l.id]).length;$('#tiles').innerHTML=`<div class="tile"><b>${nd}/${LESSONS.length}</b><span>레슨 완료</span></div><div class="tile"><b>${P.best!=null?P.best:'-'}</b><span>퀴즈 최고점</span></div><div class="tile"><b>${P.wrong.length}</b><span>다시 볼 문제</span></div>`;
+ const nd=LESSONS.filter(l=>P.done[l.id]).length;$('#tiles').innerHTML=`<div class="tile"><b>${nd}/${LESSONS.length}</b><span>🌱 레슨 완료</span></div><div class="tile"><b>${P.best!=null?P.best:'-'}</b><span>🏆 퀴즈 최고점</span></div><div class="tile"><b>${P.wrong.length}</b><span>🔁 다시 볼 문제</span></div>`;
  $('#main').innerHTML=V[tab]();if(tab==='case')renderCases();if(tab==='gloss')renderGloss()}
 function go(t){tab=t;history.replaceState(null,'','#'+t);render();window.scrollTo(0,0)}
 function startQuiz(mode){
@@ -133,6 +140,7 @@ document.addEventListener('change',e=>{const el=e.target;
 document.addEventListener('input',e=>{if(e.target.id==='cq')renderCases();if(e.target.id==='gq')renderGloss()});
 window.addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(t!==tab&&TABS.some(x=>x[0]===t)){tab=t;render()}});
 render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>

@@ -113,3 +113,20 @@ details .body{padding:0 16px 16px}
 #toast.on{opacity:1}
 @media(prefers-reduced-motion:reduce){#toast{transition:none}nav.tabs button[aria-current=page] .ic{transform:none}}
 @media(max-width:560px){.flow{flex-direction:column}.flow .a{transform:rotate(90deg);align-self:center;line-height:1}.flow .s{flex:none}}
+/* 앱처럼: 노치·홈바 안전 영역, 당겨서 새로고침 방지 */
+body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
+.hero{padding-top:calc(22px + env(safe-area-inset-top))}
+.brand{display:flex;gap:12px;align-items:center}
+.mascot{width:60px;height:60px;border-radius:16px;flex:none;box-shadow:0 4px 12px rgba(0,0,0,.25);animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+/* 귀여운 배지 */
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;margin-top:10px}
+.bd{position:relative;text-align:center;border-radius:18px;padding:12px 6px 10px;background:linear-gradient(160deg,var(--amber-soft),var(--pri-soft));border:2px solid var(--amber);line-height:1.25}
+.bd .e{display:block;font-size:2.3rem;line-height:1.15}
+.bd b{display:block;font-size:.9rem;margin-top:2px}
+.bd small{display:block;color:var(--mute);font-size:.74rem;margin-top:2px}
+.bd.lock{background:var(--line);border:2px dashed var(--mute);filter:grayscale(1);opacity:.6}
+.bd.lock:after{content:"🔒";position:absolute;right:8px;top:6px;font-size:.85rem}
+.bd.pop{animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.mascot,.bd.pop{animation:none}}

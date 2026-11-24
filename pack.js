@@ -124,7 +124,7 @@ ${tbl(['마감','공고','기관','링크'],(j.items||[]).map(x=>[x.deadline||'�
 
  document.addEventListener('click',async e=>{
   const b=e.target.closest('[data-pack]');if(!b)return;const [a,arg]=b.dataset.pack.split(':');
-  if(a==='download'){const me=document.getElementById('packMe');const t=await build({includeMe:!!(me&&me.checked)});download('edupang_study_pack.md',t);Pack.onMsg&&Pack.onMsg(`파일을 만들었습니다 (${Math.round(t.length/1024)}KB). Claude에 올려 주세요.`)}
+  if(a==='download'){const me=document.getElementById('packMe');const t=await build({includeMe:!!(me&&me.checked)});download('edupang_study_pack.md',t);try{localStorage.setItem('edupang-pack-dl','1')}catch(e){}Pack.onMsg&&Pack.onMsg(`파일을 만들었습니다 (${Math.round(t.length/1024)}KB). Claude에 올려 주세요.`)}
   else if(a==='copy'){const ok=await copy(PROMPTS[+arg][1]);Pack.onMsg&&Pack.onMsg(ok?'복사했습니다':'복사가 막혀 있습니다. 직접 선택해 복사하세요.')}
  });
  return{build,cardHtml,PROMPTS,onMsg:null};

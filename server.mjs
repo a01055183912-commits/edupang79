@@ -10,6 +10,13 @@ const FILES = {
   '/style.css': ['style.css', 'text/css; charset=utf-8'],
   '/study-data.js': ['study-data.js', 'text/javascript; charset=utf-8'],
   '/pack.js': ['pack.js', 'text/javascript; charset=utf-8'],
+  '/manifest.webmanifest': ['manifest.webmanifest', 'application/manifest+json; charset=utf-8'],
+  '/sw.js': ['sw.js', 'text/javascript; charset=utf-8'],
+  '/icons/icon.svg': ['icons/icon.svg', 'image/svg+xml'],
+  '/icons/icon-192.png': ['icons/icon-192.png', 'image/png'],
+  '/icons/icon-512.png': ['icons/icon-512.png', 'image/png'],
+  '/icons/icon-maskable-512.png': ['icons/icon-maskable-512.png', 'image/png'],
+  '/icons/apple-touch-icon.png': ['icons/apple-touch-icon.png', 'image/png'],
   '/data/notices.json': ['data/notices.json', 'application/json; charset=utf-8'],
 };
 
@@ -20,7 +27,7 @@ createServer(async (req, res) => {
   if (!hit) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Not found'); return; }
   try {
     const body = await readFile(new URL(hit[0], import.meta.url));
-    res.writeHead(200, { 'Content-Type': hit[1], 'Cache-Control': path.endsWith('.json') ? 'no-cache' : 'public, max-age=300' });
+    res.writeHead(200, { 'Content-Type': hit[1], 'Cache-Control': (path.endsWith('.json') || path === '/sw.js') ? 'no-cache' : 'public, max-age=300' });
     res.end(req.method === 'HEAD' ? undefined : body);
   } catch { res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Server error'); }
 }).listen(PORT, '0.0.0.0', () => console.log(`listening on port ${PORT}`));
