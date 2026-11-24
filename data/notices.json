@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-25T02:08:59+09:00",
+ "updatedAt": "2026-11-25T02:15:19+09:00",
  "sources": [
   {
    "id": "bsbsc",
@@ -30,6 +30,12 @@
    "name": "부산창조경제혁신센터",
    "ok": true,
    "count": 2
+  },
+  {
+   "id": "tourbiz",
+   "name": "부산관광기업지원센터",
+   "ok": true,
+   "count": 1
   }
  ],
  "items": [
@@ -42,6 +48,17 @@
    "url": "https://bipa.kr/board/business/view?seq=85490",
    "source": "bipa",
    "sourceName": "부산정보산업진흥원",
+   "firstSeen": "2026-11-25"
+  },
+  {
+   "id": "tourbiz-1274",
+   "title": "「K-콘텐츠 관광마케팅 아카데미 2기」 기초아카데미 참가자 모집(~11/25)",
+   "program": "",
+   "start": "2026-11-05",
+   "deadline": "2026-11-25",
+   "url": "https://tourbiz.bto.or.kr/kor/CMS/Board/Board.do?mCode=MN032&mgr_seq=6&mode=view&board_seq=1274",
+   "source": "tourbiz",
+   "sourceName": "부산관광기업지원센터",
    "firstSeen": "2026-11-25"
   },
   {

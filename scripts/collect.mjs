@@ -121,12 +121,36 @@ async function ccei() {
   });
 }
 
+/* ---- 부산관광기업지원센터: 사업공고 전용 게시판이 없어 공지사항(MN032)에서 모집·공모 글만 고른다 ----
+   마감일은 제목의 "(~11/25)" 표기에서 읽는다. 표기가 없으면 접수 중인지 알 수 없어 제외한다. */
+async function tourbiz() {
+  const h = await get('https://tourbiz.bto.or.kr/kor/CMS/Board/Board.do?mCode=MN032&mgr_seq=6');
+  const rows = h.split(/<tr\b/).slice(1).filter(r => r.includes('board_seq='));
+  if (!rows.length) throw new Error('게시판 행을 찾지 못했습니다 (구조 변경 또는 차단)');
+  const out = [];
+  for (const r of rows) {
+    const seq = (r.match(/board_seq=(\d+)/) || [])[1];
+    const title = decode((r.match(/<a[^>]*board_seq[^>]*>([\s\S]*?)<\/a>/) || [])[1] || '');
+    const posted = (r.match(/(\d{4})[.-](\d{2})[.-](\d{2})/) || []);
+    const dl = title.match(/\(\s*~\s*(\d{1,2})\/(\d{1,2})/);
+    if (!seq || !title || !dl || !posted[0]) continue;
+    if (!/모집|공모|신청|참가|참여/.test(title) || /결과|발표|선정자|변경|취소/.test(title)) continue;
+    let year = +posted[1];
+    if (+dl[1] < +posted[2]) year++; // 연말에 올라온 글의 다음 해 마감
+    const deadline = `${year}-${String(dl[1]).padStart(2, '0')}-${String(dl[2]).padStart(2, '0')}`;
+    out.push({ id: 'tourbiz-' + seq, title, program: '', start: `${posted[1]}-${posted[2]}-${posted[3]}`, deadline,
+      url: `https://tourbiz.bto.or.kr/kor/CMS/Board/Board.do?mCode=MN032&mgr_seq=6&mode=view&board_seq=${seq}` });
+  }
+  return out;
+}
+
 const SOURCES = [
   { id: 'bsbsc', name: '부산소상공인지원센터', run: bsbsc },
   { id: 'btp', name: '부산테크노파크', run: btp },
   { id: 'bsia', name: '부산기술창업투자원', run: bsia },
   { id: 'bipa', name: '부산정보산업진흥원', run: bipa },
   { id: 'ccei', name: '부산창조경제혁신센터', run: ccei },
+  { id: 'tourbiz', name: '부산관광기업지원센터', run: tourbiz },
 ];
 
 let prev = { items: [], sources: [] };
