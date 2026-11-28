@@ -12,6 +12,15 @@ ADMIN_PIN=원하는숫자 npm start      # 기본 포트 8081. PIN을 안 주면
 - 상태는 `data/state.json`에 저장됩니다. 클라우드 호스팅에서는 재시작 시 사라질 수 있으니 행사 중에는 재배포하지 마세요.
 - 테스트: `npm test` (점수·반영도 계산 9건)
 
+## Railway 배포
+1. Railway에서 **New Project → Deploy from GitHub repo**로 이 저장소를 고릅니다. 브랜치는 이 앱이 들어 있는 브랜치(또는 병합한 `main`)로 지정합니다.
+2. 서비스 **Settings → Source → Root Directory**를 `desert-survival/app`으로 바꿉니다(저장소 루트에는 다른 앱의 `server.mjs`가 있어서 반드시 필요합니다).
+3. **Variables**에 `ADMIN_PIN`(진행자 PIN, 숫자 6자리 이상 권장)을 추가합니다. 필요하면 `TEAM_COUNT`(기본 5), `TEAM_SIZE`(기본 6)도 넣습니다.
+4. **Settings → Networking → Generate Domain**으로 공개 주소를 만듭니다. 이 주소(`https://….up.railway.app`)로 진행자 화면(`/#admin`)을 열면 QR 코드가 이 주소로 자동 생성됩니다.
+5. (선택) 재시작해도 입력을 보존하려면 **Volume**을 `/data`에 붙이고 `DATA_DIR=/data`를 추가합니다. 행사 중에는 재배포하지 마세요.
+
+`railway.json`이 시작 명령(`npm start`)과 헬스체크(`/api/lobby`)를 지정합니다. 서버는 Railway가 주는 `PORT`를 자동으로 사용합니다.
+
 ## 팀 구성과 QR 접속 (5팀 × 6명 기본값)
 - 진행자 화면(`#admin`)의 **팀 구성**에서 팀 수(1~10)와 팀당 최대 인원(1~20)을 바꿀 수 있습니다. 기본값은 5팀·6명이며, 서버를 켤 때 환경변수 `TEAM_COUNT`, `TEAM_SIZE`로도 정할 수 있습니다. 정원이 찬 팀은 입장 화면에서 선택할 수 없습니다.
 - **팀 이름:** 팀원 누구나 화면에서 정할 수 있고(마지막 저장이 반영), 진행자가 고칠 수도 있습니다. 비워 두면 사막 동물 이름이 쓰입니다.
