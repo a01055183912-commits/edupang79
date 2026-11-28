@@ -1,0 +1,49 @@
+:root{--dk:#2B2118;--brown:#5A3E24;--sand:#F6EBD6;--sand2:#D9C5A0;--terra:#C8553D;--gold:#E0A43B;--sky:#2E86AB;--green:#4C8C4A;--white:#fff;--dust:#8A6A4B}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;background:var(--white);color:var(--dk);font-size:17px;line-height:1.5}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px;background:var(--dk);color:var(--white);position:sticky;top:0;z-index:5}
+.brand{font-weight:700;font-size:18px}.who{font-size:14px;color:var(--sand2);text-align:right}
+main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+.foot{max-width:640px;margin:0 auto;padding:12px 16px 28px;font-size:13px;color:var(--dust)}
+.foot a{color:var(--dust)}
+h1{font-size:24px;margin:8px 0 4px}h2{font-size:20px;margin:20px 0 8px}
+.sub{color:var(--brown);margin:0 0 12px}
+.chip{display:inline-block;padding:4px 12px;border-radius:99px;background:var(--gold);font-size:14px;font-weight:700;margin-bottom:6px}
+.card{background:var(--sand);border-radius:16px;padding:16px;margin:12px 0}
+.card.sky{background:var(--sky);color:#fff}.card.terra{background:var(--terra);color:#fff}
+label{display:block;font-weight:700;margin:12px 0 6px}
+input[type=text],input[type=password],select{width:100%;padding:12px 14px;font-size:17px;border:2px solid var(--sand2);border-radius:12px;background:#fff;font-family:inherit}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--sky);outline-offset:1px}
+.teams{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.teams button{padding:12px 0;font-size:18px;font-weight:700;border:2px solid var(--sand2);background:#fff;border-radius:12px;color:var(--dk)}
+.teams button[aria-pressed=true]{background:var(--terra);color:#fff;border-color:var(--terra)}
+.btn{display:block;width:100%;padding:14px;font-size:18px;font-weight:700;border:0;border-radius:14px;background:var(--terra);color:#fff;margin-top:16px;font-family:inherit}
+.btn.alt{background:var(--sky)}.btn.ghost{background:#fff;color:var(--dk);border:2px solid var(--sand2)}.btn.small{display:inline-block;width:auto;padding:8px 14px;font-size:15px;margin:4px 4px 0 0}
+.btn:disabled{opacity:.5}
+.err{color:#fff;background:var(--terra);padding:10px 14px;border-radius:12px;margin:12px 0}
+.ok{background:var(--green);color:#fff;padding:10px 14px;border-radius:12px;margin:12px 0}
+ol.rank{list-style:none;margin:0;padding:0}
+ol.rank li{display:flex;align-items:center;gap:10px;background:var(--sand);border-radius:14px;padding:8px 10px;margin:8px 0}
+ol.rank .no{flex:0 0 38px;height:38px;border-radius:50%;background:var(--terra);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+ol.rank li:nth-child(-n+5) .no{background:var(--dk)}
+ol.rank .em{font-size:26px;flex:0 0 34px;text-align:center}
+ol.rank .nm{flex:1;font-weight:700}
+ol.rank .mv{display:flex;gap:6px}
+ol.rank .mv button{width:44px;height:44px;border-radius:12px;border:2px solid var(--sand2);background:#fff;font-size:18px;color:var(--dk)}
+ol.rank .mv button:disabled{opacity:.3}
+.hint{font-size:14px;color:var(--brown)}
+.pills span{display:inline-block;background:#fff;border-radius:99px;padding:4px 12px;margin:4px 6px 0 0;font-size:15px;color:var(--dk)}
+.pills .done{background:var(--green);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid var(--sand2)}
+td.num,th.num{text-align:right}
+.bar{display:flex;height:22px;border-radius:8px;overflow:hidden;background:#fff;margin:6px 0}
+.bar i{display:block;height:100%}
+.legend{font-size:13px;color:var(--brown)}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 8px}
+.rankno{font-size:28px;font-weight:700}
+.row{display:flex;gap:12px;align-items:center}.row>*{min-width:0}
+@media (max-width:360px){.teams{grid-template-columns:repeat(5,1fr);gap:6px}}
+
+.ans td:nth-child(2),.ans th{white-space:nowrap}.ans th.num{white-space:nowrap}.ans td:nth-child(3){font-size:14px}
