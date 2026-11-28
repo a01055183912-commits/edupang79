@@ -161,6 +161,12 @@ createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x'), path = url.pathname;
   try {
     if (path.startsWith('/api/')) return await api(req, res, path, url);
+    if (/^\/img\/[a-z0-9-]+\.(jpg|png)$/.test(path) && (req.method === 'GET' || req.method === 'HEAD')) {
+      const img = await readFile(join(here, 'public', path.slice(1))).catch(() => null);
+      if (!img) { res.writeHead(404).end(); return; }
+      res.writeHead(200, { 'Content-Type': path.endsWith('.png') ? 'image/png' : 'image/jpeg', 'Cache-Control': 'public, max-age=86400' });
+      res.end(req.method === 'HEAD' ? undefined : img); return;
+    }
     const hit = STATIC[path];
     if (!hit || (req.method !== 'GET' && req.method !== 'HEAD')) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Not found'); return; }
     const file = await readFile(join(here, 'public', hit[0]));

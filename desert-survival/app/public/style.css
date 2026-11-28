@@ -27,7 +27,7 @@ ol.rank{list-style:none;margin:0;padding:0}
 ol.rank li{display:flex;align-items:center;gap:10px;background:var(--sand);border-radius:14px;padding:8px 10px;margin:8px 0}
 ol.rank .no{flex:0 0 38px;height:38px;border-radius:50%;background:var(--terra);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
 ol.rank li:nth-child(-n+5) .no{background:var(--dk)}
-ol.rank .em{font-size:26px;flex:0 0 34px;text-align:center}
+ol.rank .pic{width:64px;height:44px;object-fit:cover;border-radius:10px;background:#fff;flex:0 0 64px}
 ol.rank .nm{flex:1;font-weight:700}
 ol.rank .mv{display:flex;gap:6px}
 ol.rank .mv button{width:44px;height:44px;border-radius:12px;border:2px solid var(--sand2);background:#fff;font-size:18px;color:var(--dk)}
@@ -47,3 +47,25 @@ td.num,th.num{text-align:right}
 @media (max-width:360px){.teams{grid-template-columns:repeat(5,1fr);gap:6px}}
 
 .ans td:nth-child(2),.ans th{white-space:nowrap}.ans th.num{white-space:nowrap}.ans td:nth-child(3){font-size:14px}
+
+.hero{margin:0 0 12px;border-radius:18px;overflow:hidden;background:var(--sand);position:relative}
+.hero img{display:block;width:100%;height:auto;max-height:260px;object-fit:cover;object-position:center 30%}
+.hero figcaption{padding:10px 14px;font-weight:700;background:var(--dk);color:#fff;font-size:16px}
+.steps{display:flex;gap:6px;list-style:none;margin:0 0 12px;padding:0}
+.steps li{flex:1;text-align:center;padding:6px 4px;border-radius:12px;background:var(--sand);color:var(--dust);font-size:14px;font-weight:700}
+.steps li.now{background:var(--terra);color:#fff}.steps li.done{background:var(--green);color:#fff}
+.steps .ic{display:block;font-size:20px;line-height:1.2}
+.teams .te{display:block;font-size:22px;line-height:1.2}
+.pic.sm{width:40px;height:27px;border-radius:6px;margin-right:6px;vertical-align:middle;object-fit:cover}
+ol.rank li.pop{animation:pop .35s ease-out}
+@keyframes pop{0%{transform:scale(.97);background:var(--gold)}100%{transform:scale(1)}}
+.wait{display:flex;align-items:center;gap:12px;background:var(--sand);border:2px dashed var(--sand2);border-radius:16px;padding:12px 14px;margin:14px 0}
+.wait .sand{font-size:34px;display:inline-block;animation:flip 2.4s ease-in-out infinite}
+@keyframes flip{0%,45%{transform:rotate(0)}55%,100%{transform:rotate(180deg)}}
+.tier{font-weight:700;margin:2px 0 4px}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin:12px 0 4px}
+.pod{flex:1;max-width:150px;text-align:center}
+.pod .mdl{font-size:34px;line-height:1.1}.pod .pn{font-weight:700}.pod .ps{font-size:15px;color:var(--brown)}
+.pod .blk{margin-top:4px;border-radius:12px 12px 0 0;color:#fff;font-size:26px;font-weight:700;padding-top:6px}
+.pod.p1 .blk{height:96px;background:var(--gold)}.pod.p2 .blk{height:70px;background:var(--dust)}.pod.p3 .blk{height:52px;background:var(--terra)}
+@media (prefers-reduced-motion:reduce){.wait .sand,ol.rank li.pop{animation:none}}
