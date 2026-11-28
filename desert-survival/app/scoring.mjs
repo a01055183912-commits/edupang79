@@ -44,3 +44,18 @@ export function teamResult({ members, team, memberCount, spokenCount, minorityAd
     total: r1(accuracy + synergy + participation),
   };
 }
+
+// 내 개인 순위가 팀 합의 순위에 얼마나 담겼는지. 물건별 순위 차이의 합이 0이면 100%, 최대(112)면 0%.
+const MAX_DIFF = Math.floor((ITEM_IDS.length * ITEM_IDS.length) / 2);
+export function reflection(individual, team) {
+  if (!isValidRanking(individual) || !isValidRanking(team)) throw new Error('invalid ranking');
+  const rows = individual.map((id, i) => ({ id, mine: i + 1, team: team.indexOf(id) + 1 }));
+  rows.forEach((r) => { r.diff = Math.abs(r.mine - r.team); });
+  const total = rows.reduce((a, r) => a + r.diff, 0);
+  return {
+    percent: Math.round(100 * (1 - total / MAX_DIFF)),
+    mine1: rows[0],
+    matched: rows.filter((r) => r.diff <= 1).sort((a, b) => a.mine - b.mine).slice(0, 3),
+    missed: rows.filter((r) => r.diff >= 4).sort((a, b) => b.diff - a.diff || a.mine - b.mine).slice(0, 3),
+  };
+}

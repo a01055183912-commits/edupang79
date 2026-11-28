@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { errorScore, teamResult, isValidRanking } from './scoring.mjs';
+import { errorScore, teamResult, isValidRanking, reflection } from './scoring.mjs';
 import { ANSWER_IDS, ITEM_IDS } from './items.mjs';
 
 const rev = [...ANSWER_IDS].reverse();
@@ -39,4 +39,17 @@ test('시너지: 개선폭×1.5 (최대 20) + 팀이 최고 개인보다 좋으�
   const team = swap(ANSWER_IDS, 0, 1); // 오차 2
   const r = teamResult({ members: [m1, m2], team, memberCount: 2, spokenCount: 2, minorityAdopted: false });
   assert.equal(r.synergyBonus, 10); assert.equal(r.synergy, 30);
+});
+
+test('반영도: 같은 순위면 100%, 완전 반대면 0%', () => {
+  assert.equal(reflection(ANSWER_IDS, ANSWER_IDS).percent, 100);
+  assert.equal(reflection(ANSWER_IDS, rev).percent, 0);
+});
+test('반영도: 내 1위의 팀 순위와 반영된/아쉬운 물건', () => {
+  const team = [...ANSWER_IDS]; // 내 순위는 거울을 15위로 보낸 경우
+  const mine = [...ANSWER_IDS.slice(1), ANSWER_IDS[0]];
+  const r = reflection(mine, team);
+  assert.equal(r.mine1.id, ANSWER_IDS[1]); assert.equal(r.mine1.team, 2);
+  assert.equal(r.missed[0].id, ANSWER_IDS[0]); assert.equal(r.missed[0].diff, 14);
+  assert.ok(r.percent > 0 && r.percent < 100);
 });

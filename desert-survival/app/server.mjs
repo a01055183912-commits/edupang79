@@ -1,22 +1,29 @@
 // 사막 생존 게임 웹앱 서버. 의존성 없음. 상태는 메모리에 두고 JSON 파일로 저장한다.
 // 환경변수: PORT(기본 8081), ADMIN_PIN(진행자 PIN, 없으면 실행 시 무작위 생성해 로그에 출력), DATA_DIR(기본 ./data)
 import { createServer } from 'node:http';
+import { networkInterfaces } from 'node:os';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { ITEMS, ANSWER, ANSWER_IDS } from './items.mjs';
-import { isValidRanking, errorScore, teamResult } from './scoring.mjs';
+import { isValidRanking, errorScore, teamResult, reflection } from './scoring.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT) || 8081;
 const DATA_DIR = process.env.DATA_DIR || join(here, 'data');
 const ADMIN_PIN = process.env.ADMIN_PIN || String(100000 + (randomBytes(3).readUIntBE(0, 3) % 900000));
-const MAX_TEAMS = 10, MAX_MEMBERS = 200, PHASES = ['individual', 'team', 'result'];
+const MAX_TEAMS = 10, MAX_MEMBERS = 200, MAX_TEAM_SIZE = 20, PHASES = ['individual', 'team', 'result', 'story'];
+const FB_WEATHER = ['sunny', 'cloudy', 'rainy', 'storm'], FB_TOMORROW = ['ask', 'listen', 'praise', 'speak', 'yield'], FB_Q = ['q1', 'q2', 'q3', 'q4'];
 
-const fresh = () => ({ phase: 'individual', members: {}, teams: {} });
+const DEFAULT_CONFIG = {
+  teamCount: Math.min(MAX_TEAMS, Math.max(1, Number(process.env.TEAM_COUNT) || 5)),
+  teamSize: Math.min(MAX_TEAM_SIZE, Math.max(1, Number(process.env.TEAM_SIZE) || 6)),
+};
+const fresh = (config = DEFAULT_CONFIG) => ({ phase: 'individual', members: {}, teams: {}, config: { ...config } });
 let state = fresh();
 try { state = JSON.parse(await readFile(join(DATA_DIR, 'state.json'), 'utf8')); } catch { /* 새로 시작 */ }
+state.config = { ...DEFAULT_CONFIG, ...(state.config || {}) };
 let saveTimer = null;
 function save() {
   clearTimeout(saveTimer);
@@ -27,7 +34,7 @@ function save() {
 
 const STATIC = {
   '/': ['index.html', 'text/html; charset=utf-8'], '/index.html': ['index.html', 'text/html; charset=utf-8'],
-  '/app.js': ['app.js', 'text/javascript; charset=utf-8'], '/style.css': ['style.css', 'text/css; charset=utf-8'],
+  '/app.js': ['app.js', 'text/javascript; charset=utf-8'], '/vendor/qrcode.js': ['vendor/qrcode.js', 'text/javascript; charset=utf-8'], '/style.css': ['style.css', 'text/css; charset=utf-8'],
 };
 const json = (res, code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(obj)); };
 const fail = (res, code, msg) => json(res, code, { error: msg });
@@ -49,7 +56,7 @@ const teamMembers = (team) => Object.values(state.members).filter((m) => m.team 
 function computeTeam(team) {
   const ms = teamMembers(team), t = state.teams[team];
   const submitted = ms.filter((m) => m.individual);
-  const out = { team, memberCount: ms.length, individualSubmitted: submitted.length, teamSubmitted: !!t?.ranking,
+  const out = { team, name: t?.name || '', memberCount: ms.length, feedbackCount: ms.filter((m) => m.feedback).length, individualSubmitted: submitted.length, teamSubmitted: !!t?.ranking,
     minorityAdopted: !!t?.minorityAdopted, minorityNote: t?.minorityNote || '', spokenCount: t?.spokenCount ?? null };
   if (t?.ranking && ms.length) {
     out.result = teamResult({ members: submitted.map((m) => m.individual.ranking), team: t.ranking, memberCount: ms.length, spokenCount: t.spokenCount ?? null, minorityAdopted: !!t.minorityAdopted });
@@ -57,14 +64,39 @@ function computeTeam(team) {
   return out;
 }
 function allTeams() {
-  const ids = new Set([...Object.values(state.members).map((m) => m.team), ...Object.keys(state.teams).map(Number)]);
+  const ids = new Set([...Array(state.config.teamCount)].map((_, i) => i + 1));
+  Object.values(state.members).forEach((m) => ids.add(m.team));
+  Object.keys(state.teams).forEach((k) => state.teams[k].ranking && ids.add(Number(k)));
   return [...ids].sort((a, b) => a - b).map(computeTeam);
 }
 function scoreboard() {
   const teams = allTeams().filter((t) => t.result).sort((a, b) => b.result.total - a.result.total);
-  const pending = allTeams().filter((t) => !t.result).map((t) => t.team);
+  const pending = allTeams().filter((t) => !t.result && t.memberCount > 0).map((t) => t.team);
   return { teams, pending, answer: ANSWER.map((a) => ({ ...a, name: ITEMS.find((i) => i.id === a.id).name })) };
 }
+const r1 = (n) => Math.round(n * 10) / 10;
+function teamFeedback(team) {
+  const fb = teamMembers(team).filter((m) => m.feedback).map((m) => m.feedback);
+  const avg = Object.fromEntries(FB_Q.map((q) => [q, fb.length ? r1(fb.reduce((a, f) => a + f.answers[q], 0) / fb.length) : null]));
+  const weather = Object.fromEntries(FB_WEATHER.map((w) => [w, fb.filter((f) => f.weather === w).length]));
+  const tomorrow = Object.fromEntries(FB_TOMORROW.map((k) => [k, fb.filter((f) => f.tomorrow.includes(k)).length]));
+  return { count: fb.length, avg, weather, tomorrow, oneLines: fb.map((f) => f.oneLine).filter(Boolean).slice(0, 8) };
+}
+function teamReflect(team) {
+  const cons = state.teams[team]?.ranking;
+  if (!cons) return null;
+  const ps = teamMembers(team).filter((m) => m.individual).map((m) => reflection(m.individual.ranking, cons).percent);
+  return ps.length ? { n: ps.length, avg: Math.round(ps.reduce((a, b) => a + b, 0) / ps.length), min: Math.min(...ps), max: Math.max(...ps) } : null;
+}
+function storyData(team) {
+  const c = computeTeam(team), t = state.teams[team] || {};
+  return { team, name: t.name || '', memberCount: c.memberCount, total: c.result ? c.result.total : null, feedback: teamFeedback(team), story: t.story || null,
+    minorityNote: t.minorityAdopted ? t.minorityNote || '' : '', contested: disagreement(team).contested, reflect: teamReflect(team) };
+}
+const teamNames = () => Object.fromEntries(Object.entries(state.teams).filter(([, t]) => t.name).map(([k, t]) => [k, t.name]));
+const lobby = () => ({ teamCount: state.config.teamCount, teamSize: state.config.teamSize, teamNames: teamNames(),
+  teams: [...Array(state.config.teamCount)].map((_, i) => ({ team: i + 1, count: teamMembers(i + 1).length })) });
+const lanUrls = () => Object.values(networkInterfaces()).flat().filter((n) => n && n.family === 'IPv4' && !n.internal).map((n) => `http://${n.address}:${PORT}`);
 // 팀 안에서 의견이 가장 갈린 물건(순위 편차가 큰 순)과 평균 순서
 function disagreement(team) {
   const rs = teamMembers(team).filter((m) => m.individual).map((m) => m.individual.ranking);
@@ -83,15 +115,22 @@ function disagreement(team) {
 
 async function api(req, res, path, url) {
   if (path === '/api/items' && req.method === 'GET') return json(res, 200, { items: ITEMS });
+  if (path === '/api/lobby' && req.method === 'GET') return json(res, 200, lobby());
   if (path === '/api/state' && req.method === 'GET') {
     const me = state.members[url.searchParams.get('id')];
-    const out = { phase: state.phase, me: null };
+    const out = { phase: state.phase, me: null, teamNames: teamNames() };
     if (me) {
       const mates = teamMembers(me.team);
       out.me = { id: me.id, name: me.name, team: me.team, individual: me.individual ? { ranking: me.individual.ranking, reason: me.individual.reason, error: state.phase === 'result' ? errorScore(me.individual.ranking) : undefined } : null };
       out.team = { team: me.team, members: mates.map((m) => ({ name: m.name, submitted: !!m.individual })), consensus: state.teams[me.team]?.ranking || null,
         minorityAdopted: !!state.teams[me.team]?.minorityAdopted, minorityNote: state.teams[me.team]?.minorityNote || '' };
       if (state.phase !== 'individual') Object.assign(out.team, disagreement(me.team));
+      if (state.phase === 'story') {
+        const cons = state.teams[me.team]?.ranking;
+        out.me.reflection = me.individual && cons ? reflection(me.individual.ranking, cons) : null;
+        out.me.feedback = me.feedback || null;
+        out.team.story = storyData(me.team);
+      }
     }
     return json(res, 200, out);
   }
@@ -105,14 +144,39 @@ async function api(req, res, path, url) {
   if (path === '/api/join') {
     const name = clean(b.name, 20), team = Number(b.team);
     if (!name) return fail(res, 400, '이름을 입력해 주세요');
-    if (!Number.isInteger(team) || team < 1 || team > MAX_TEAMS) return fail(res, 400, `팀은 1~${MAX_TEAMS}번 중에서 골라 주세요`);
+    if (!Number.isInteger(team) || team < 1 || team > state.config.teamCount) return fail(res, 400, `팀은 1~${state.config.teamCount}번 중에서 골라 주세요`);
     // 같은 이름·같은 팀으로 다시 들어오면 기존 참가자로 이어서 진행
     const prev = Object.values(state.members).find((m) => m.team === team && m.name === name);
     if (prev) return json(res, 200, { id: prev.id, resumed: true });
     if (Object.keys(state.members).length >= MAX_MEMBERS) return fail(res, 400, '참가 인원이 가득 찼어요');
+    if (teamMembers(team).length >= state.config.teamSize) return fail(res, 409, `${team}팀은 ${state.config.teamSize}명이 모두 찼어요. 다른 팀을 골라 주세요`);
     const id = randomBytes(8).toString('hex');
     state.members[id] = { id, name, team, individual: null };
     save(); return json(res, 200, { id });
+  }
+  if (path === '/api/teamname') {
+    const m = state.members[b.id];
+    if (!m) return fail(res, 404, '참가 정보를 찾을 수 없어요. 다시 입장해 주세요');
+    state.teams[m.team] = { ...(state.teams[m.team] || {}), name: clean(b.name, 12) };
+    save(); return json(res, 200, { ok: true, name: state.teams[m.team].name });
+  }
+  if (path === '/api/feedback') {
+    const m = state.members[b.id];
+    if (!m) return fail(res, 404, '참가 정보를 찾을 수 없어요. 다시 입장해 주세요');
+    if (!['result', 'story'].includes(state.phase)) return fail(res, 409, '아직 이야기 시간이 아니에요');
+    const a = b.answers || {};
+    if (!FB_Q.every((q) => Number.isInteger(a[q]) && a[q] >= 1 && a[q] <= 5)) return fail(res, 400, '모든 질문에 답해 주세요');
+    if (!FB_WEATHER.includes(b.weather)) return fail(res, 400, '우리 팀 분위기 날씨를 골라 주세요');
+    const tomorrow = [...new Set(Array.isArray(b.tomorrow) ? b.tomorrow : [])].filter((k) => FB_TOMORROW.includes(k)).slice(0, 2);
+    m.feedback = { answers: Object.fromEntries(FB_Q.map((q) => [q, a[q]])), weather: b.weather, oneLine: clean(b.oneLine, 80), tomorrow, at: Date.now() };
+    save(); return json(res, 200, { ok: true });
+  }
+  if (path === '/api/story') {
+    const m = state.members[b.id];
+    if (!m) return fail(res, 404, '참가 정보를 찾을 수 없어요. 다시 입장해 주세요');
+    if (!['result', 'story'].includes(state.phase)) return fail(res, 409, '아직 이야기 시간이 아니에요');
+    state.teams[m.team] = { ...(state.teams[m.team] || {}), story: { crisis: clean(b.crisis, 40), twist: clean(b.twist, 40), ending: clean(b.ending, 50), free: clean(b.free, 100), by: m.name, at: Date.now() } };
+    save(); return json(res, 200, { ok: true });
   }
   if (path === '/api/individual') {
     const m = state.members[b.id];
@@ -149,10 +213,25 @@ async function api(req, res, path, url) {
         state.teams[team] = { ...(state.teams[team] || {}), minorityAdopted: !!b.value }; save(); break;
       }
       case 'removeMember': delete state.members[b.id]; save(); break;
-      case 'reset': state = fresh(); save(); break;
+      case 'setTeamName': {
+        const team = Number(b.team);
+        if (!Number.isInteger(team) || team < 1 || team > MAX_TEAMS) return fail(res, 400, 'bad team');
+        state.teams[team] = { ...(state.teams[team] || {}), name: clean(b.name, 12) }; save(); break;
+      }
+      case 'setConfig': {
+        const teamCount = Number(b.teamCount), teamSize = Number(b.teamSize);
+        if (!Number.isInteger(teamCount) || teamCount < 1 || teamCount > MAX_TEAMS) return fail(res, 400, `팀 수는 1~${MAX_TEAMS}`);
+        if (!Number.isInteger(teamSize) || teamSize < 1 || teamSize > MAX_TEAM_SIZE) return fail(res, 400, `팀당 인원은 1~${MAX_TEAM_SIZE}`);
+        const over = Object.values(state.members).find((m) => m.team > teamCount);
+        if (over) return fail(res, 409, `${over.team}팀에 이미 참가자가 있어서 팀 수를 줄일 수 없어요`);
+        const full = [...Array(teamCount)].map((_, i) => i + 1).find((t) => teamMembers(t).length > teamSize);
+        if (full) return fail(res, 409, `${full}팀에 이미 ${teamMembers(full).length}명이 있어서 인원을 줄일 수 없어요`);
+        state.config = { teamCount, teamSize }; save(); break;
+      }
+      case 'reset': state = fresh(state.config); save(); break;
       default: return fail(res, 400, 'unknown action');
     }
-    return json(res, 200, { phase: state.phase, teams: allTeams(), members: Object.values(state.members).map((m) => ({ id: m.id, name: m.name, team: m.team, submitted: !!m.individual })), answer: ANSWER_IDS });
+    return json(res, 200, { phase: state.phase, config: state.config, lanUrls: lanUrls(), stories: allTeams().filter((t) => t.memberCount > 0).map((t) => storyData(t.team)), teams: allTeams(), members: Object.values(state.members).map((m) => ({ id: m.id, name: m.name, team: m.team, submitted: !!m.individual })), answer: ANSWER_IDS });
   }
   return fail(res, 404, 'not found');
 }
